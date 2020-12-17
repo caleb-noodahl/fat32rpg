@@ -1,0 +1,110 @@
+{
+  "EngineSettings": {
+
+  },
+  "PlayerSettings": {
+    "Name": "paxprose",
+    "Rating": 0,
+    "Currency": 0,
+    "DistanceTraveled": 0,
+    "Objective": "rome",
+    "ObjectiveDistance" :  0
+  },
+  "GameEventSettings": {
+    "EventDefinitions": [
+      {
+        "Name": "Welcome",
+        "Message": "Welcome traveller! In this game you'll live the life of a humble merchant"
+      }
+    ]
+  },
+  "TownSettings": {
+    "TownDefintions": [
+      {
+        "Name": "Rome",
+        "Description": "All roads lead here",
+        "Rating": 0,
+        "Distance": 0
+      },
+      {
+        "Name": "Neapolis",
+        "Description": "A good place to chip a tooth - or break a leg",
+        "Rating": 0,
+        "Distance": 100
+      },
+      {
+        "Name": "Alexandria",
+        "Description": "",
+        "Rating": 1,
+        "Distance": 255
+      }
+    ]
+  },
+  "InventorySettings": {
+    "Default": [
+      {
+        "Rating": 0,
+        "StatModifier": 0,
+        "Stat": 0,
+        "Name": "Apple",
+        "Weight": 1,
+        "Value": 1,
+        "Type": 0,
+        "Actions": [
+          "throw",
+          "sell"
+        ]
+      },
+      {
+        "Rating": 0,
+        "StatModifier": 2,
+        "Stat": 4,
+        "Name": "Hat",
+        "Weight": 1,
+        "Value": 10,
+        "Type": 2,
+        "Actions": [
+          "sell"
+        ]
+      },
+      {
+        "Rating": 0,
+        "StatModifier": 2,
+        "Stat": 3,
+        "Name": "Glasses",
+        "Weight": 1,
+        "Value": 35,
+        "Type": 0,
+        "Actions": [
+          "sell"
+        ]
+      },
+
+      {
+        "Rating": 0,
+        "StatModifier": 2,
+        "Stat": 3,
+        "Name": "Dagger",
+        "Weight": 2,
+        "Value": 20,
+        "Type": 1,
+        "Actions": [
+          "sell"
+        ]
+      },
+      {
+        "Rating": 0,
+        "StatModifier": 0,
+        "Stat": 0,
+        "Name": "Iron Ore",
+        "Weight": 7,
+        "Value": 10,
+        "Type": 0,
+        "Actions": [
+          "throw",
+          "sell"
+        ]
+      }
+    ]
+  }
+}
