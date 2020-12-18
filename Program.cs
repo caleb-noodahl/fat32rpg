@@ -45,15 +45,7 @@ namespace MerchantRPG
                 List<InventoryItem> townItems = new List<InventoryItem>(); 
                 for(var inventoryIterator = 0; inventoryIterator < rand.Next(1, 7); inventoryIterator++)
                 {
-                    townItems.Add(new InventoryItem()
-                    {
-                        StatModifier = rand.Next(0, 4),
-                        Stat = (Stats)rand.Next(0, 3),
-                        Name = names[rand.Next(0, names.Length -1)],
-                        Weight = rand.Next(1, 20),
-                        Value = (double)rand.Next(0, 300),
-                        Type = (ItemType)rand.Next(0, 2)
-                    });
+                    townItems.Add(new InventoryItem(true)); 
                 }
                 
             }
