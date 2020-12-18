@@ -1,8 +1,11 @@
 ﻿using MerchantRPG.Models.Configuration;
+using MerchantRPG.Models.Engine.Events;
+using MerchantRPG.Models.Engine.GameObjects;
 using MerchantRPG.Services;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 
@@ -10,33 +13,48 @@ namespace MerchantRPG
 {
     class Program
     {
+        static string[] names = new string[]
+        {
+            "glasses", "sword", "plate", "frizbee", "tongs", "hammer"
+        };
+        static string[] towns = new string[]
+        {
+            "here", "there", "necropolis", "bastion"
+        };
         static async Task Main(string[] args)
         {
-            var services = new ServiceCollection();
-            ConfigureServices(services);
-            var provider = services.BuildServiceProvider();
-            await provider.GetService<App>().Run(); 
+            var towns = GenerateTowns(); 
+
+
         }
 
-        private static void ConfigureServices(ServiceCollection services)
+
+        private static List<TownEvent> GenerateTowns()
         {
-            var configuration = new ConfigurationBuilder()
-                .SetBasePath($"{Directory.GetCurrentDirectory()}/Config/")
-                .AddJsonFile("app-settings.json", false)
-                .Build();
+            List<TownEvent> response = new List<TownEvent>();
+            var rand = new Random(); 
 
-            services.AddOptions();
-            services.Configure<EngineSettings>(configuration.GetSection("EngineSettings"));
-            services.Configure<PlayerSettings>(configuration.GetSection("PlayerSettings"));
-            services.Configure<GameEventSettings>(configuration.GetSection("GameEventSettings"));
-            services.Configure<InventorySettings>(configuration.GetSection("InventorySettings"));
-            services.Configure<TownSettings>(configuration.GetSection("TownSettings"));
+            //generate a x number of towns
+            for(int i = 0; i < rand.Next(1, 3); i++)
+            {
+                List<InventoryItem> townItems = new List<InventoryItem>(); 
+                for(var inventoryIterator = 0; inventoryIterator < rand.Next(1, 7); inventoryIterator++)
+                {
+                    townItems.Add(new InventoryItem()
+                    {
+                        StatModifier = rand.Next(0, 4),
+                        Stat = (Stats)rand.Next(0, 3),
+                        Name = names[rand.Next(0, names.Length -1)],
+                        Weight = rand.Next(1, 20),
+                        Value = (double)rand.Next(0, 300),
+                        Type = (ItemType)rand.Next(0, 2)
+                    });
+                }
 
-            services.AddScoped<IEventService, EventService>(); 
-            services.AddScoped<IGameEngineService, GameEngineService>();
 
-            services.AddSingleton<App>(); 
-
+            }
+            return response;
         }
+        
     }   
 }
