@@ -19,13 +19,15 @@ namespace GameplayLoopCombat1.classes
 
         public Equipment(Character owner)
         {
-            Dexterity = Convert.ToInt32(owner.Dexterity * (new Random().Next(0, 20) / 100));
-            Strength = Convert.ToInt32(owner.Strength * (new Random().Next(0, 20) / 100));
-            Intelligence = Convert.ToInt32(owner.Intelligence * (new Random().Next(0, 20) / 100));
+            Random rand = new Random();
+
+            Dexterity = Convert.ToInt32(owner.Dexterity * (rand.Next(0, 20) / 100));
+            Strength = Convert.ToInt32(owner.Strength * (rand.Next(0, 20) / 100));
+            Intelligence = Convert.ToInt32(owner.Intelligence * (rand.Next(0, 20) / 100));
 
             if(AbilityLevel == 0)
             {
-                int pityPoint = new Random().Next(0, 3);
+                int pityPoint = rand.Next(0, 3);
                 switch(pityPoint)
                 {
                     case 0:
@@ -40,31 +42,31 @@ namespace GameplayLoopCombat1.classes
                 }
             }
 
-            int rand = new Random().Next(0, 100);
-            if (rand < 11)
+            int attrRand = rand.Next(0, 100);
+            if (attrRand < 11)
             {
-                int rand3 = new Random().Next(0, 100);
-                if (rand3 > 50)
+                int negDexRand = rand.Next(0, 100);
+                if (negDexRand > 50)
                     Strength += Dexterity / 2;
                 else
                     Intelligence += Dexterity / 2;
 
                 Dexterity *= -1;
             }
-            else if (rand < 22)
+            else if (attrRand < 22)
             {
-                int rand4 = new Random().Next(0, 100);
-                if (rand4 > 50)
+                int negStrRand = rand.Next(0, 100);
+                if (negStrRand > 50)
                     Dexterity += Strength / 2;
                 else
                     Intelligence += Strength / 2;
 
                 Strength *= -1;
             }
-            else
+            else if (attrRand < 33)
             {
-                int rand5 = new Random().Next(0, 100);
-                if (rand5 > 33)
+                int negIntRand = rand.Next(0, 100);
+                if (negIntRand > 50)
                     Dexterity += Intelligence / 2;
                 else
                     Strength += Intelligence / 2;
@@ -73,9 +75,9 @@ namespace GameplayLoopCombat1.classes
             }
 
             
-            int rand6 = new Random().Next(0, Enum.GetValues(typeof(Adjectives)).Length);
-            int rand7 = new Random().Next(0, Enum.GetValues(typeof(Things)).Length);
-            Description = (Adjectives)rand6 + " " + (Things)rand7 + " of " + PrimaryStat;
+            int randAdj = rand.Next(0, Enum.GetValues(typeof(Adjectives)).Length);
+            int randThing = rand.Next(0, Enum.GetValues(typeof(Things)).Length);
+            Description = (Adjectives)randAdj + " " + (Things)randThing + " of " + PrimaryStat;
 
             DistributeEquipment(owner);
         }
@@ -126,7 +128,7 @@ namespace GameplayLoopCombat1.classes
         {
             //living player party ability level / killed things ability level
             double score = participants.Where(p => p.Health > 0 && p.Player).Sum(p => p.AbilityLevel) / participants.Where(p => p.Health <= 0 && !p.Player).Sum(p => p.AbilityLevel);
-            int dropScore = new Random().Next(0, 100);
+            int dropScore = rand.Next(0, 100);
             return (score * 100 > dropScore);
         }
     }
