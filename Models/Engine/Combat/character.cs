@@ -1,4 +1,5 @@
 ﻿using MerchantRPG.Models.Engine;
+using MerchantRPG.Models.Engine.GameObjects;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -36,6 +37,11 @@ namespace GameplayLoopCombat1.classes
             Strength += equipment.Strength;
             Intelligence += equipment.Intelligence;
             Equip.Add(equipment);
+        }
+
+        public void AddEquipmentFromInventoryItem(InventoryItem ii)
+        {
+            Equip.Add(new Equipment(ii));
         }
 
         public void RemoveEquipment(Equipment equipment)

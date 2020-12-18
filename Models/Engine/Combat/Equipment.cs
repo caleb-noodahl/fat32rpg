@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MerchantRPG.Models.Engine.GameObjects;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -15,6 +16,14 @@ namespace GameplayLoopCombat1.classes
             Strength = str;
             Intelligence = intel;
             Description = description;
+        }
+
+        public Equipment(InventoryItem ii)
+        {
+            this.Description = ii.Name;
+            this.Strength = ii.Stat == Stats.Strength ? Strength + ii.StatModifier : this.Strength;
+            this.Dexterity = ii.Stat == Stats.Dexterity ? Dexterity + ii.StatModifier : this.Dexterity;
+            this.Intelligence = ii.Stat == Stats.Intelligencge ? ii.StatModifier : this.Intelligence;
         }
 
         public Equipment(Character owner)
@@ -127,6 +136,7 @@ namespace GameplayLoopCombat1.classes
         public static bool Search (Character[] participants)
         {
             //living player party ability level / killed things ability level
+            var rand = new Random();
             double score = participants.Where(p => p.Health > 0 && p.Player).Sum(p => p.AbilityLevel) / participants.Where(p => p.Health <= 0 && !p.Player).Sum(p => p.AbilityLevel);
             int dropScore = rand.Next(0, 100);
             return (score * 100 > dropScore);

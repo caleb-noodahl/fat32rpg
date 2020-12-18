@@ -49,6 +49,9 @@ namespace MerchantRPG.Models.Engine.GameObjects
         Capacity,
         Speech,
         Mercantile,
-        Armor
+        Armor,
+        Dexterity,
+        Strength,
+        Intelligencge
     }
 }
