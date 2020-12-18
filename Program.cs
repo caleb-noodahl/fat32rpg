@@ -62,7 +62,6 @@ namespace MerchantRPG
             }
 
 
-            
             return response;
         }
         
