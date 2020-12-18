@@ -7,6 +7,11 @@ namespace MerchantRPG.Models.Configuration
     public class TownSettings
     {
         public List<TownDefintion> TownDefintions { get; set; } = new List<TownDefintion>(); 
+        public TownSettings() { }
+        public TownSettings(List<TownDefintion> townDefs)
+        {
+            TownDefintions = townDefs;
+        }
     }
 
     public class TownDefintion

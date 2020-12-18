@@ -8,6 +8,7 @@ namespace MerchantRPG.Models.Configuration
     public class GameEventSettings
     {
         public List<GameEventDefinition> EventDefintions { get; set; } = new List<GameEventDefinition>(); 
+        public GameEventSettings() { }
     }
 
     public class GameEventDefinition

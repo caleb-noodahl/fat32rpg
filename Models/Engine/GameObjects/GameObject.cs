@@ -13,8 +13,6 @@ namespace MerchantRPG.Models.Engine
         public bool Rating { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
-
-
     }
 
     

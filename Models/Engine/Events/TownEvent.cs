@@ -89,8 +89,6 @@ namespace MerchantRPG.Models.Engine.Events
                 Console.WriteLine($"Name : {it.Name}");
                 Console.WriteLine($" Price { it.Value} Weight { it.Weight}");
                 Console.WriteLine($" Stat Modifier : {it.Stat}, {it.StatModifier}");
-                Console.WriteLine($" Actions : ");
-                it.Actions.ForEach(a => { Console.Write($"  {a}"); });
                 Console.WriteLine($"{Environment.NewLine}");
             });
 

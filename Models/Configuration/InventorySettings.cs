@@ -8,6 +8,11 @@ namespace MerchantRPG.Models.Configuration
     public class InventorySettings
     {
         public List<InventoryItem> Default { get; set; } = new List<InventoryItem>(); 
+        public InventorySettings() { }
+        public InventorySettings(List<InventoryItem> d)
+        {
+            Default = d;
+        }
 
     }
 }

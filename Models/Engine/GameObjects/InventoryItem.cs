@@ -12,7 +12,6 @@ namespace MerchantRPG.Models.Engine.GameObjects
         public string Name { get; set; }
         public int Weight { get; set; }
         public double Value { get; set; }
-        public List<string> Actions { get; set; } = new List<string>();
         public int Rating { get; set; }
         public ItemType Type { get; set; }
 

@@ -17,6 +17,18 @@ namespace MerchantRPG.Models.Engine
         public double ObjectiveDistance { get; set; }
         public int Capacity { get; set; }
 
+        public PlayerState() { }
+
+        public PlayerState(string name, int _dex, int _str, int _int) : base(name, _dex, _str,_int)
+        {
+            this.Name = name;
+            CurrentContext = Context.Unknown;
+            NextContext = Context.Unknown;
+            Rating = 0;
+            Objective = string.Empty;
+            ObjectiveDistance = 0;
+            Capacity = 0;
+        }
 
         internal ItemType ParseTypeSelection(string ts)
         {
