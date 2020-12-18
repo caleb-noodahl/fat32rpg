@@ -1,4 +1,5 @@
-﻿using System;
+﻿using GameplayLoopCombat1.classes;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -19,6 +20,13 @@ namespace MerchantRPG.Models.Engine.GameObjects
         {
             return Value;
         }
+
+        public InventoryItem()
+        {
+            var _rand = new Random();
+            
+        }
+
     }
     public enum ItemType
     {

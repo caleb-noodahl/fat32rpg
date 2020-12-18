@@ -1,4 +1,6 @@
-﻿using MerchantRPG.Models.Configuration;
+﻿using GameplayLoopCombat1.classes;
+using MerchantRPG.Models.Configuration;
+using MerchantRPG.Models.Engine;
 using MerchantRPG.Models.Engine.Events;
 using MerchantRPG.Models.Engine.GameObjects;
 using MerchantRPG.Services;
@@ -23,6 +25,9 @@ namespace MerchantRPG
         };
         static async Task Main(string[] args)
         {
+            PlayerState charct = new Character("gnome", 1, 4, 6) as PlayerState; 
+
+
             var towns = GenerateTowns(); 
 
 
@@ -33,7 +38,7 @@ namespace MerchantRPG
         {
             List<TownEvent> response = new List<TownEvent>();
             var rand = new Random(); 
-
+            
             //generate a x number of towns
             for(int i = 0; i < rand.Next(1, 3); i++)
             {
@@ -50,8 +55,7 @@ namespace MerchantRPG
                         Type = (ItemType)rand.Next(0, 2)
                     });
                 }
-
-
+                
             }
             return response;
         }

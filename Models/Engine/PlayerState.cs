@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using GameplayLoopCombat1.classes;
 using MerchantRPG.Models.Engine.GameObjects;
 
 namespace MerchantRPG.Models.Engine
 {
-    public class PlayerState
+    public class PlayerState : Character
     {
         public Context CurrentContext { get; set; }
         public Context NextContext { get; set; }
@@ -15,6 +16,7 @@ namespace MerchantRPG.Models.Engine
         public string Objective { get; set; }
         public double ObjectiveDistance { get; set; }
         public int Capacity { get; set; }
+
 
         internal ItemType ParseTypeSelection(string ts)
         {

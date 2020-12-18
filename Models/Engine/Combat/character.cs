@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MerchantRPG.Models.Engine;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -13,6 +14,11 @@ namespace GameplayLoopCombat1.classes
         public double Health { get; set; }
         public bool Player { get; set; }
         public List<Equipment> Equip = new List<Equipment>();
+
+        public Character()
+        {
+
+        }
 
         public Character(string _name, int _dex, int _str, int _int)
         {
