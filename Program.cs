@@ -20,12 +20,11 @@ namespace MerchantRPG
         {
             
             CharacterCreator cc = new CharacterCreator();
-            Party.Lead = cc.result as PlayerState;
-            //does this^ mean we're no longer passing the object by reference? if so, there will be a disconnect between the combat party entity and the playerstate entity.
+            Party.Lead = cc.result;
             Party.Members.Add(cc.result);
             Map.GenerateTowns();
             
-            var result = await Map.towns[0].Event(Party.Lead);
+            var result = await Map.towns[0].Event(Party.State);
             Console.ReadLine();
 
         }

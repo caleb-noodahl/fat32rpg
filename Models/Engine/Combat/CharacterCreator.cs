@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MerchantRPG.Models.Engine;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -54,6 +55,7 @@ namespace GameplayLoopCombat1.classes
                 Int32.TryParse(Console.ReadLine(), out diff);
             }
             Party.Difficulty = diff;
+            Party.State = new PlayerState();
 
             result = new Character(name, dex, str, intel);
             result.Player = true;
