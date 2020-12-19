@@ -30,11 +30,29 @@ namespace MerchantRPG.Models.Engine.GameObjects
             var _rand = new Random();
             StatModifier = _rand.Next(0, 5);
             Stat = (Stats)_rand.Next(0, 7);
-            Name = char.ConvertFromUtf32(_rand.Next(1,69));
             Weight = _rand.Next(1, 20);
             Value = (double)_rand.Next(0, 300);
             Type = (ItemType)_rand.Next(0, 2);
+            switch (Type)
+            {
+                case ItemType.Armor:
+                    Name = Goods[_rand.Next(0, Goods.Length)];
+                    break;
+                case ItemType.Weapons:
+                    Name = char.ConvertFromUtf32(_rand.Next(1, 69));
+                    break;
+                case ItemType.Goods:
+                    Name = char.ConvertFromUtf32(_rand.Next(1, 69));
+                    break;
+            }
         }
+
+        public string[] Goods =
+        {
+            "Glasses", "Apples", "Seeds", "Corn", "Hay", "Beaver Pelts", "Salt", "Cocaine", "Flour", "Wheat", "Rye", "Lumber", "Iron Ore", "Copper Ore", "Bronze Bars", "Tin Ore", "Eggs", "Rope"
+        };
+
+
 
     }
     public enum ItemType

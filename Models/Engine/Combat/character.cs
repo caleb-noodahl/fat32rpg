@@ -11,7 +11,13 @@ namespace GameplayLoopCombat1.classes
     public class Character : DSI
     {
         public string Name { get; set; }
-        public double HealthMax { get; set; }
+        public double HealthMax 
+        {
+            get
+            {
+                return Strength * 5;
+            }
+        }
         public double Health { get; set; }
         public bool Player { get; set; }
         public List<Equipment> Equip = new List<Equipment>();
@@ -27,7 +33,6 @@ namespace GameplayLoopCombat1.classes
             Dexterity = _dex;
             Strength = _str;
             Intelligence = _int;
-            HealthMax = Strength * 5;
             Health = HealthMax;
         }
        
