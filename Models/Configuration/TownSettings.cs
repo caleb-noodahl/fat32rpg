@@ -1,5 +1,7 @@
-﻿using System;
+﻿using MerchantRPG.Models.Engine.Events;
+using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Text;
 
 namespace MerchantRPG.Models.Configuration
@@ -12,6 +14,21 @@ namespace MerchantRPG.Models.Configuration
         {
             TownDefintions = townDefs;
         }
+        public Point Coords { get; set; }
+
+        public int X { get; set; }
+        public int Y { get; set; }
+
+
+        public double GetDistance(TownEvent town)
+        {
+            return Math.Pow(X - town._towns.X, 2) + Math.Pow(Y - town._towns.Y, 2);
+        }
+
+        public double GetDistance(TownDefintion town)
+        {
+            return Math.Pow(X - town.X, 2) + Math.Pow(Y - town.Y, 2);
+        }
     }
 
     public class TownDefintion
@@ -19,5 +36,8 @@ namespace MerchantRPG.Models.Configuration
         public string Name { get; set; }
         public int Rating { get; set; }
         public double Distance { get; set; }
+        public int X { get; set; }
+        public int Y { get; set; }
+
     }
 }

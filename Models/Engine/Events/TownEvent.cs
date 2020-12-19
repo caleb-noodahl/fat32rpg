@@ -12,7 +12,7 @@ namespace MerchantRPG.Models.Engine.Events
     public class TownEvent : GameEvent
     {
         private List<InventoryItem> _i { get; set; } = new List<InventoryItem>();
-        private TownSettings _towns; 
+        public TownSettings _towns; 
 
         public TownEvent(string name, TownSettings towns, InventorySettings invSettings)
         {
@@ -26,7 +26,7 @@ namespace MerchantRPG.Models.Engine.Events
         public async Task<PlayerState> Event(PlayerState s)
         {
             Console.WriteLine($"-===========-");
-            Console.WriteLine($"Welcome to {this.Name}");
+            Console.WriteLine($"Welcome to {this.Name}, " + s.Name);
 
             while(!IsComplete)
             {
@@ -49,7 +49,7 @@ namespace MerchantRPG.Models.Engine.Events
             {
                 if(x.Name != this.Name)
                 {
-                    Console.WriteLine($"{x.Name} is {x.Distance} away.");
+                    Console.WriteLine($"{x.Name} is {_towns.GetDistance(x)} away.");
                     Console.WriteLine($"Town rating : {x.Rating}{Environment.NewLine}");
                 }
             });
@@ -63,7 +63,7 @@ namespace MerchantRPG.Models.Engine.Events
             s.Currency = 0;
             s.NextContext = Context.Travel;
             s.Objective = selection.ToLower();
-            s.ObjectiveDistance = objective.Distance;
+            s.ObjectiveDistance = _towns.GetDistance(objective);
             return s;
         }
 
