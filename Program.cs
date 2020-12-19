@@ -18,52 +18,20 @@ namespace MerchantRPG
 
         static async Task Main(string[] args)
         {
-            PlayerState c = new PlayerState("gnome", 1, 4, 6);
-            c.Currency = 1000;
-            c.Capacity = 100;
-
-            var towns = GenerateTowns();
-            var result = await towns[0].Event(c);
+            
+            CharacterCreator cc = new CharacterCreator();
+            Party.Lead = cc.result as PlayerState;
+            //does this^ mean we're no longer passing the object by reference? if so, there will be a disconnect between the combat party entity and the playerstate entity.
+            Party.Members.Add(cc.result);
+            Map.GenerateTowns();
+            
+            var result = await Map.towns[0].Event(Party.Lead);
             Console.ReadLine();
 
         }
 
 
-        private static List<TownEvent> GenerateTowns()
-        {
-            List<TownEvent> response = new List<TownEvent>();
-            
-            Dictionary<TownDefintion, InventorySettings> _towns = new Dictionary<TownDefintion, InventorySettings>();
-            List<TownDefintion> _townDefs = new List<TownDefintion>(); 
-            var rand = new Random(); 
-            
-            //generate a x number of towns
-            for(int i = 0; i < rand.Next(2, 6); i++)
-            {
-                TownDefintion town = new TownDefintion()
-                {
-                    Name = i.ToString(),
-                    Rating = i * rand.Next(0, 3),
-                    Distance = i * rand.Next(1, 300)
-                };
-                
-                
-                List<InventoryItem> townItems = new List<InventoryItem>(); 
-                for(var inventoryIterator = 0; inventoryIterator < rand.Next(1, 7); inventoryIterator++)
-                {
-                    townItems.Add(new InventoryItem(true)); 
-                }
-                _townDefs.Add(town); 
-                _towns.Add(town, new InventorySettings(townItems));
-            }
-            foreach(KeyValuePair<TownDefintion, InventorySettings> val in _towns)
-            {
-                response.Add(new TownEvent(val.Key.Name, new TownSettings(_townDefs), val.Value));
-            }
-
-
-            return response;
-        }
+        
         
     }   
 }

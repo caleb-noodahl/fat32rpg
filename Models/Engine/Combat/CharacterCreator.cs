@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace GameplayLoopCombat1.classes
 {
-    public class CharacterCreator : DSI
+    public class CharacterCreator
     {
         public int CharacterPoints = 12;
         public Character result { get; set; }
@@ -42,6 +42,18 @@ namespace GameplayLoopCombat1.classes
 
             Console.WriteLine("What is your name?");
             string name = Console.ReadLine();
+
+            Console.WriteLine("Input a difficulty multiplier:");
+            Console.WriteLine("0.5 = easy");
+            Console.WriteLine("1 = normal");
+            Console.WriteLine("1.5 = hard");
+
+            int diff = -1;
+            while (diff > CharacterPoints || diff < 0)
+            {
+                Int32.TryParse(Console.ReadLine(), out diff);
+            }
+            Party.Difficulty = diff;
 
             result = new Character(name, dex, str, intel);
             result.Player = true;

@@ -11,13 +11,17 @@ namespace MerchantRPG.Models.Engine
         public Context CurrentContext { get; set; }
         public Context NextContext { get; set; }
         public double Rating { get; set; }
-        public long Currency { get; set; }
+        public long Currency { get; set; } = 1000;
         public List<InventoryItem> Inventory { get; set; } = new List<InventoryItem>();
         public string Objective { get; set; }
         public double ObjectiveDistance { get; set; }
-        public int Capacity { get; set; }
+        public int Capacity { get; set; } = 100;
 
-        public PlayerState() { }
+        public PlayerState() 
+        {
+            Currency = (long)Party.Difficulty * Currency;
+            Capacity = (int)Math.Floor(Party.Difficulty * Capacity);
+        }
 
         public PlayerState(string name, int _dex, int _str, int _int) : base(name, _dex, _str,_int)
         {
@@ -41,6 +45,7 @@ namespace MerchantRPG.Models.Engine
             return res;
 
         }
+
     }
 
 }
