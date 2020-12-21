@@ -36,13 +36,13 @@ namespace MerchantRPG.Models.Engine.GameObjects
             switch (Type)
             {
                 case ItemType.Armor:
-                    Name = Goods[_rand.Next(0, Goods.Length)];
+                    Name = Metals[_rand.Next(0, Metals.Length)] + " " + Armor[_rand.Next(0, Armor.Length)];
                     break;
                 case ItemType.Weapons:
-                    Name = char.ConvertFromUtf32(_rand.Next(1, 69));
+                    Name = Metals[_rand.Next(0, Metals.Length)] + " " + Weapons[_rand.Next(0, Weapons.Length)];
                     break;
                 case ItemType.Goods:
-                    Name = char.ConvertFromUtf32(_rand.Next(1, 69));
+                    Name = Goods[_rand.Next(0, Goods.Length)];
                     break;
             }
         }
@@ -52,6 +52,20 @@ namespace MerchantRPG.Models.Engine.GameObjects
             "Glasses", "Apples", "Seeds", "Corn", "Hay", "Beaver Pelts", "Salt", "Cocaine", "Flour", "Wheat", "Rye", "Lumber", "Iron Ore", "Copper Ore", "Bronze Bars", "Tin Ore", "Eggs", "Rope"
         };
 
+        public string[] Weapons =
+        {
+            "Sword", "Dagger", "Mace", "Club", "Flail", "Quarterstaff", "Hammer", "Warhammer", "Knife", "Long Sword", "Saber", "Lance", "Fork", "Man Catcher", "Pike", "Sword Staff", "Bow", "Long Bow", "Recurve Bow", "Crossbow"
+        };
+
+        public string[] Metals =
+        {
+            "Iron", "Bronze", "Gold", "Aluminum", "Copper", "Titanium", "Silver", "Lead", "Uranium", "Steel", "Plutonium"
+        };
+
+        public string[] Armor =
+        {
+            "Breastplate", "Helmet", "Gloves", "Boots", "Shoes", "Tunic", "Coif", "Leggings", "Skirt", "Underwear", "Brigadine", "Cuiriass", "Spaulder", "Pauldren", "Brace", "Gauntlet", "Chassis", "Greeve"
+        };
 
 
     }

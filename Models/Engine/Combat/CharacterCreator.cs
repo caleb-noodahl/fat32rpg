@@ -50,7 +50,7 @@ namespace GameplayLoopCombat1.classes
             Console.WriteLine("1.5 = hard");
 
             int diff = -1;
-            while (diff > CharacterPoints || diff < 0)
+            while (diff < 0)
             {
                 Int32.TryParse(Console.ReadLine(), out diff);
             }

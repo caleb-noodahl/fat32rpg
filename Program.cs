@@ -23,7 +23,7 @@ namespace MerchantRPG
             Party.Lead = cc.result;
             Party.Members.Add(cc.result);
             Map.GenerateTowns();
-            
+            new Combat(Party.Members);
             var result = await Map.towns[0].Event(Party.State);
             Console.ReadLine();
 
