@@ -300,14 +300,31 @@ namespace GameplayLoopCombat1.classes
     {
         public Requirement Reqs { get; set; }
         public delegate AbilityResponse AbilityAction(Character caster, Character[] targets, int turn, string abilityName);
-        public AbilityAction Action { get; set; }
+        private AbilityAction _Action;
+
+        public AbilityAction Action 
+        { 
+            get 
+            {
+                return _Action;
+            } 
+            set 
+            {
+                _Action = (caster, targets, turn, abilityName) => 
+                { 
+                    AbilityResponse result = value(caster, targets, turn, abilityName);
+                    caster.AddXP(Reqs);
+                    return result;
+                };
+            } 
+        }
         public int MaxTargets { get; set; }
         public string Description { get; set; }
         public int Cooldown { get; set; }
 
         public Dictionary<Character, int> LastCast { get; set; } = new Dictionary<Character, int>();
 
-        public bool MeetsRequirements(Character caster, int turn)
+        public bool MeetsRequirements(Character caster, int turn = 0)
         {
             if (
                 caster.Dexterity < Reqs.Dexterity ||

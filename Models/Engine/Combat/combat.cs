@@ -21,6 +21,14 @@ namespace GameplayLoopCombat1.classes
                 GenerateEnemies();
 
             Console.WriteLine("Combat!");
+            Console.WriteLine("Combat Participants:");
+            foreach(Character person in Participants)
+            {
+                Console.WriteLine(person.Name + " - Lvl:" + person.AbilityLevel + " HP: " + person.Health);
+            }
+            Console.WriteLine("---continue---");
+            Console.ReadLine();
+
             while (true)
             {
                 if (Flee)

@@ -9,7 +9,7 @@ namespace GameplayLoopCombat1.classes
 {
     public class CharacterCreator
     {
-        public int CharacterPoints = 12;
+        public int CharacterPoints = 16;
         public Character result { get; set; }
         public CharacterCreator()
         {
@@ -59,6 +59,16 @@ namespace GameplayLoopCombat1.classes
 
             result = new Character(name, dex, str, intel);
             result.Player = true;
+
+            Console.WriteLine("Welcome to the world, " + result.Name + ". These are your skills:");
+            foreach(KeyValuePair<string, Ability> castable in Abilities.AbilityList.Where(entry => entry.Value.MeetsRequirements(result)))
+            {
+                Console.WriteLine(castable.Key + " - " + castable.Value.Description);
+            }
+            Console.WriteLine("---continue---");
+            Console.ReadLine();
+
+
         }
     }
 }

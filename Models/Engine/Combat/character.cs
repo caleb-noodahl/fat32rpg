@@ -99,8 +99,8 @@ namespace GameplayLoopCombat1.classes
                 else if (effect.Turns > 0)
                     effect.Turns--;
             });
-
-
         }
+
+       
     }
 }
