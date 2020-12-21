@@ -49,10 +49,10 @@ namespace GameplayLoopCombat1.classes
             Console.WriteLine("1 = normal");
             Console.WriteLine("1.5 = hard");
 
-            int diff = -1;
+            double diff = -1;
             while (diff < 0)
             {
-                Int32.TryParse(Console.ReadLine(), out diff);
+                Double.TryParse(Console.ReadLine(), out diff);
             }
             Party.Difficulty = diff;
             Party.State = new PlayerState();

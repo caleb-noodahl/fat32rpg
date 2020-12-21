@@ -19,7 +19,7 @@ namespace MerchantRPG.Models.Engine
 
         public PlayerState() 
         {
-            Currency = (long)Party.Difficulty * Currency;
+            Currency = (long)Math.Floor(Party.Difficulty * Currency);
             Capacity = (int)Math.Floor(Party.Difficulty * Capacity);
         }
 

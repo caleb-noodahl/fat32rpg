@@ -1,4 +1,5 @@
 ﻿using MerchantRPG.Models.Engine;
+using MerchantRPG.Models.Engine.Combat;
 using MerchantRPG.Models.Engine.GameObjects;
 using System;
 using System.Collections.Generic;
@@ -21,6 +22,7 @@ namespace GameplayLoopCombat1.classes
         public double Health { get; set; }
         public bool Player { get; set; }
         public List<Equipment> Equip = new List<Equipment>();
+        public List<StatusEffect> Effects = new List<StatusEffect>();
 
         public Character()
         {
@@ -55,6 +57,50 @@ namespace GameplayLoopCombat1.classes
             Strength -= equipment.Strength;
             Intelligence -= equipment.Intelligence;
             Equip.Remove(equipment);
+        }
+
+        public double DoDamage(double dmg)
+        {
+            Random rand = new Random();
+
+            int miss = rand.Next(0, 100);
+            double missPercent = Effects.Sum(e => e.MissPercent);
+            missPercent += Dexterity;
+            if(missPercent > 75)
+            {
+                missPercent = 75;
+            }
+            if (miss <= missPercent)
+            {
+                Console.WriteLine("Miss!");
+                return 0;
+            }
+
+
+            Effects.ForEach(effect => 
+            {
+                dmg *= effect.DamageModifier;
+            });
+            Health -= dmg;
+            return dmg;
+        }
+
+        public void TickTurn()
+        {
+            Effects.ForEach(effect =>
+            {
+                effect.EffectAction(this);
+            });
+
+            Effects.ForEach(effect =>
+            {
+                if (effect.Turns == 0)
+                    Effects.Remove(effect);
+                else if (effect.Turns > 0)
+                    effect.Turns--;
+            });
+
+
         }
     }
 }

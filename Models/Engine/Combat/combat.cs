@@ -26,19 +26,22 @@ namespace GameplayLoopCombat1.classes
                 if (Flee)
                 {
                     Console.WriteLine("You flee!");
+                    ClearStatuses();
                     return;
                 }
 
                 if (GameOver)
                 {
                     Console.WriteLine("You lose!");
+                    ClearStatuses();
                     return;
                 }
 
                 if(Participants.Where(p => p.Player == false && p.Health > 0).Count() == 0)
                 {
                     Console.WriteLine("VICTORY!");
-                    if(FindDrops.Search(Participants))
+                    ClearStatuses();
+                    if (FindDrops.Search(Participants))
                     {
                         foreach(Character enemy in Participants.Where(p => p.Health <= 0 && !p.Player))
                         {
@@ -53,6 +56,19 @@ namespace GameplayLoopCombat1.classes
             
         }
 
+        public void ClearStatuses()
+        {
+            foreach(Character c in Participants)
+            {
+                c.Effects.Clear();
+            }
+
+            foreach(KeyValuePair<string, Ability> kvp in Abilities.AbilityList)
+            {
+                kvp.Value.LastCast.Clear();
+            }
+        }
+
         public void NewTurn()
         {
             Turn++;
@@ -61,7 +77,7 @@ namespace GameplayLoopCombat1.classes
                 if(Participants[subturn].Health > 0)
                 {
                     Console.WriteLine("Turn " + Turn + "." + subturn + " - " + Participants[subturn].Name);
-                    IEnumerable<KeyValuePair<string, Ability>> castable = Abilities.AbilityList.Where(entry => entry.Value.MeetsRequirements(Participants[subturn]));
+                    IEnumerable<KeyValuePair<string, Ability>> castable = Abilities.AbilityList.Where(entry => entry.Value.MeetsRequirements(Participants[subturn], Turn));
                     if (Participants[subturn].Player)
                         PlayerTurn(Participants[subturn], castable);
                     else
@@ -73,7 +89,7 @@ namespace GameplayLoopCombat1.classes
                         while (castableArr[npcChoice].Value.MaxTargets > playerTargets.Count())
                             playerTargets.Add(playerTargets.First());
 
-                        AbilityResponse actionResult = castableArr[npcChoice].Value.Action(Participants[subturn], playerTargets.ToArray());
+                        AbilityResponse actionResult = castableArr[npcChoice].Value.Action(Participants[subturn], playerTargets.ToArray(), Turn, castableArr[npcChoice].Key);
                         Console.WriteLine(Participants[subturn].Name + " uses " + castableArr[npcChoice].Key);
                         Console.WriteLine(actionResult.Message);
                     }
@@ -85,6 +101,7 @@ namespace GameplayLoopCombat1.classes
                         GameOver = true;
                         return;
                     }
+                    Participants[subturn].TickTurn();
                     Console.WriteLine("---continue---");
                     Console.ReadLine();
                 }
@@ -117,7 +134,8 @@ namespace GameplayLoopCombat1.classes
             }
 
             Console.WriteLine("Who would you like to target with " + castableArr[choice - 1].Key + "?");
-            int targetOption = 0;
+            Console.WriteLine("0. Finished selecting targets");
+            int targetOption = 1;
             foreach (Character character in Participants)
             {
                 
@@ -127,17 +145,21 @@ namespace GameplayLoopCombat1.classes
 
             int targetChoice = -1;
             List<Character> targets = new List<Character>();
-            while (targetChoice > targetOption || targetChoice < 0 || targets.Count() < castableArr[choice - 1].Value.MaxTargets)
+            while (targetChoice != 0 && (targetChoice > targetOption || targetChoice < 0 || targets.Count() < castableArr[choice - 1].Value.MaxTargets))
             {
                 Int32.TryParse(Console.ReadLine(), out targetChoice);
-                if(targetChoice < targetOption && targetChoice >= 0)
+                if(targetChoice < targetOption && targetChoice > 0 && !targets.Exists(e => e == Participants[targetChoice - 1]))
                 {
-                    targets.Add(Participants[targetChoice]);
-                    Console.WriteLine("Added target " + Participants[targetChoice].Name);
+                    targets.Add(Participants[targetChoice - 1]);
+                    Console.WriteLine("Added target " + Participants[targetChoice - 1].Name);
                 }
             }
 
-            AbilityResponse actionResult = castableArr[choice - 1].Value.Action(player, targets.ToArray());
+            AbilityResponse actionResult = castableArr[choice - 1].Value.Action(player, targets.ToArray(), Turn, castableArr[choice - 1].Key);
+            if (!Abilities.AbilityList[castableArr[choice - 1].Key].LastCast.ContainsKey(player))
+                Abilities.AbilityList[castableArr[choice - 1].Key].LastCast.Add(player, Turn);
+            else
+                Abilities.AbilityList[castableArr[choice - 1].Key].LastCast[player] = Turn;
             Console.WriteLine(actionResult.Message);
         }
 
@@ -145,7 +167,7 @@ namespace GameplayLoopCombat1.classes
         {
             IEnumerable<Character> players = Participants.Where(p => p.Player);
             int ability = players.Sum(p => p.AbilityLevel);
-            int enemyAbility = (Int32)(Party.Difficulty* ability);
+            int enemyAbility = (Int32)Math.Ceiling(Party.Difficulty* ability);
             int enemyCount = rand.Next(1, players.Count()+2);
 
             List<Character> participantsL = Participants.ToList();
