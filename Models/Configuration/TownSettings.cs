@@ -1,4 +1,5 @@
 ﻿using MerchantRPG.Models.Engine.Events;
+using MerchantRPG.Models.Engine.GameObjects;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -9,15 +10,20 @@ namespace MerchantRPG.Models.Configuration
     public class TownSettings
     {
         public List<TownDefintion> TownDefintions { get; set; } = new List<TownDefintion>(); 
-        public TownSettings() { }
         public TownSettings(List<TownDefintion> townDefs)
         {
+            Random rand = new Random();
             TownDefintions = townDefs;
+            priceMods.Add(ItemType.Armor, (double)rand.Next(20, 200) / 100);
+            priceMods.Add(ItemType.Weapons, (double)rand.Next(20, 200) / 100);
+            priceMods.Add(ItemType.Goods, (double)rand.Next(20, 200) / 100);
         }
 
         public int X { get; set; }
         public int Y { get; set; }
         public string InnName { get; set; }
+        public Dictionary<ItemType, double> priceMods { get; set; } = new Dictionary<ItemType, double>() {
+        };
 
 
         public double GetDistance(TownEvent town)

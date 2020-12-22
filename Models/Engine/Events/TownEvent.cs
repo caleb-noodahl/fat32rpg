@@ -12,7 +12,7 @@ namespace MerchantRPG.Models.Engine.Events
 {
     public class TownEvent : GameEvent
     {
-        private List<InventoryItem> _i { get; set; } = new List<InventoryItem>();
+        public  List<InventoryItem> _i { get; set; } = new List<InventoryItem>();
         public TownSettings _towns; 
 
         public TownEvent(string name, TownSettings towns, InventorySettings invSettings)
@@ -26,10 +26,10 @@ namespace MerchantRPG.Models.Engine.Events
             _towns.InnName = "The " + Names.Adjective(rand.Next(0, Enum.GetValues(typeof(Names.Adjectives)).Length)) + " " + Names.Things[rand.Next(0, Names.Things.Length)];
         }
 
-        public async Task<PlayerState> Event(PlayerState s)
+        public async Task<PlayerState> Event()
         {
             Console.WriteLine($"-===========-");
-            Console.WriteLine($"Welcome to {this.Name}, " + s.Name);
+            Console.WriteLine($"Welcome to {this.Name}, " + Party.State.Name);
 
             while(!IsComplete)
             {
@@ -37,25 +37,25 @@ namespace MerchantRPG.Models.Engine.Events
                 Console.WriteLine($"buy or sell or travel or rest or fight{Environment.NewLine}"); 
                 switch(Console.ReadLine().ToLower())
                 {
-                    case "buy": s = DisplayBuyMenu(s);  break;
-                    case "sell": s = DisplayBuyMenu(s); break;
-                    case "travel": s = SetTravelContextAndExit(s); IsComplete = true; break;
-                    case "rest": s = Rest(s); break;
+                    case "buy":  DisplayBuyMenu();  break;
+                    case "sell": DisplaySellMenu(); break;
+                    case "travel": SetTravelContextAndExit(); IsComplete = true; break;
+                    case "rest": Rest(); break;
                     case "fight": new GameplayLoopCombat1.classes.Combat(Party.Members); break;
                     default: Console.WriteLine($"I'm afraid that isn't an option...{Environment.NewLine}"); break;
                 }
             }
-            return s;
+            return Party.State;
         }
 
-        private PlayerState Rest(PlayerState s)
+        private PlayerState Rest()
         {
             int price = new Random().Next(1, 5) * 10;
             Console.WriteLine("This is " + _towns.InnName + ", a night here costs " + price + " gold. You staying? (y/n)");
             switch(Console.ReadLine())
             {
                 case "y":
-                    if (s.Spend(price))
+                    if (Party.State.Spend(price))
                     {
                         Party.Members.ForEach(member =>
                         {
@@ -69,11 +69,11 @@ namespace MerchantRPG.Models.Engine.Events
                 default:
                     break;
             }
-            return s;
+            return Party.State;
 
         }
 
-        private PlayerState SetTravelContextAndExit(PlayerState s)
+        private PlayerState SetTravelContextAndExit()
         {
             Console.WriteLine($"{Environment.NewLine}Which city would you like to embark for?");
             _towns.TownDefintions.ForEach(x => 
@@ -89,16 +89,16 @@ namespace MerchantRPG.Models.Engine.Events
             if(objective == null)
             {
                 Console.WriteLine($"That selection isn't available..");
-                SetTravelContextAndExit(s); 
+                SetTravelContextAndExit(); 
             }
-            s.Currency = 0;
-            s.NextContext = Context.Travel;
-            s.Objective = selection.ToLower();
-            s.ObjectiveDistance = _towns.GetDistance(objective);
-            return s;
+            Party.State.Currency = 0;
+            Party.State.NextContext = Context.Travel;
+            Party.State.Objective = selection.ToLower();
+            Party.State.ObjectiveDistance = _towns.GetDistance(objective);
+            return Party.State;
         }
 
-        private PlayerState DisplayBuyMenu(PlayerState s)
+        private PlayerState DisplayBuyMenu()
         {
             Console.WriteLine($"-===========-");
             Console.WriteLine($"{this.Name}'s market. menu");
@@ -112,13 +112,13 @@ namespace MerchantRPG.Models.Engine.Events
             }
             Console.WriteLine(Environment.NewLine);
             var itemType = Console.ReadLine().ToLower();
-            Console.WriteLine($"Your currency : {s.Currency}. Free capacity : {s.Capacity}{Environment.NewLine}");
+            Console.WriteLine($"Your currency : {Party.State.Currency}. Free capacity : {Party.State.Capacity}{Environment.NewLine}");
             
-            var filteredItems = _i.Where(i => i.Rating <= s.Rating && i.Type == s.ParseTypeSelection(itemType)).ToList();
+            var filteredItems = _i.Where(i => i.Rating <= Party.State.Rating && i.Type == Party.State.ParseTypeSelection(itemType)).ToList();
             filteredItems.ForEach(it =>
             {
                 Console.WriteLine($"Name : {it.Name}");
-                Console.WriteLine($" Price { it.Value} Weight { it.Weight}");
+                Console.WriteLine($" Price { it.Value * _towns.priceMods[it.Type] } Weight { it.Weight}");
                 Console.WriteLine($" Stat Modifier : {it.Stat}, {it.StatModifier}");
                 Console.WriteLine($"{Environment.NewLine}");
             });
@@ -126,41 +126,63 @@ namespace MerchantRPG.Models.Engine.Events
             var selection = Console.ReadLine().Split(" ");
             if(selection[0] == "buy")
             {
-                var item = filteredItems.FirstOrDefault(x => x.Name.ToLower().Contains(selection[1].ToLower()));
-                if(item != null)
+                InventoryItem item = filteredItems.FirstOrDefault(x => x.Name.ToLower().Contains(selection[1].ToLower()));
+                IEnumerable<InventoryItem> items = filteredItems.Where(x => x.Name.ToLower().Contains(selection[1].ToLower()));
+
+                int amount = 1;
+                if (item.Type == ItemType.Goods && !int.TryParse(selection[selection.Length - 1], out amount))
+                    amount = 1;
+
+                if(Party.State.Buy(item, this, amount))
                 {
-                    int amount = 0;
-                    if (!int.TryParse(selection[selection.Length - 1], out amount))
-                        amount = 1;
-                    
-                    //check to make sure the player can afford the transaction
-                    if(item.Value * amount > s.Currency)
-                    {
-                        Console.WriteLine($"It doesn't look like you can afford that");
-                        DisplayBuyMenu(s);
-                        return s;
-                    }
-                    //check to make sure the player can 
-                    if(item.Weight * amount > s.Capacity)
-                    {
-                        Console.WriteLine($"You wouldn't be able carry all of it");
-                        DisplayBuyMenu(s);
-                        return s;
-                    }
-                    for(int i = 0; i < amount; i++)
-                    {
-                        s.Inventory.Add(item);
-                        s.Capacity -= item.Weight;
-                    }
+                    string totalItemType = item.Type == ItemType.Goods ? Party.State.Inventory.Where(x => x.Name.ToLower().Contains(selection[1].ToLower())).Sum(x => x.Weight) + "lbs" : amount.ToString();
                         
-                    s.Currency += (long)item.Value * amount * -1; 
-                    var totalItemType = s.Inventory.Where(x => x.Name.ToLower().Contains(selection[1].ToLower())).Count();
-                    item.Equip.DistributeEquipment(Party.Lead, true);
+                        
                     Console.WriteLine($"You now have {totalItemType} {item.Name}(s) in your inventory{Environment.NewLine}");
-                    Console.WriteLine($"Your currency : {s.Currency}. Free capacity : {s.Capacity} ");
+                    Console.WriteLine($"Your currency : {Party.State.Currency}. Free capacity : {Party.State.Capacity} ");
                 }
+
+                
+                
             }
-            return s; 
+            return Party.State; 
+        }
+        private PlayerState DisplaySellMenu()
+        {
+            Console.WriteLine($"-===========-");
+            Console.WriteLine($"{Party.State.Name}'s sellable inventory:");
+            Console.WriteLine($"//Type the number of the item you wish to sell");
+
+            int option = 1;
+            Console.WriteLine("0. Exit");
+            Party.State.Inventory.OrderBy(item => item.Value).ToList().ForEach(item => 
+            {
+                Console.WriteLine(option + ". " + item.Name + " - $" + item.Value * _towns.priceMods[item.Type] + " Weight:" + item.Weight);
+                option++;
+            });
+
+            int sell = -1;
+            while (sell > option || sell < 0)
+            {
+                Int32.TryParse(Console.ReadLine(), out sell);
+            }
+            sell -= 1;
+            switch(sell)
+            {
+                case -1:
+                    return Party.State;
+                    break;
+                default:
+                    InventoryItem selling = Party.State.Inventory.OrderBy(item => item.Value).ElementAt(sell);
+                    Console.WriteLine("Confirm sell (y/n) " + selling.Name + " for $" + selling.Value * _towns.priceMods[selling.Type]);
+                    if(Console.ReadLine().ToLower() == "y")
+                    {
+                        Party.State.Sell(selling, this);
+                    }
+                    break;
+            }
+
+            return Party.State;
         }
     }
 }

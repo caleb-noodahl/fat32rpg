@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace MerchantRPG.Models.Engine.GameObjects
 {
-    public delegate Task<PlayerState> EventAction(PlayerState state);
+    public delegate Task<PlayerState> EventAction();
     public abstract class GameEvent
     {
         public Context Context { get; set; }

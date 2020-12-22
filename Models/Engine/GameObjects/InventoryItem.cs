@@ -11,7 +11,7 @@ namespace MerchantRPG.Models.Engine.GameObjects
         public Stats Stat { get; set; }
         public string Name { get; set; }
         public int Weight { get; set; }
-        public double Value { get; set; }
+        public long Value { get; set; }
         public int Rating { get; set; }
         public ItemType Type { get; set; }
         public Equipment Equip { get; set; }
@@ -30,10 +30,10 @@ namespace MerchantRPG.Models.Engine.GameObjects
         {
             var _rand = new Random();
             StatModifier = 0;
-            Stat = (Stats)_rand.Next(0, 7);
-            Weight = _rand.Next(1, 20);
-            Value = (double)_rand.Next(0, 300);
-            Type = (ItemType)_rand.Next(0, 2);
+            Stat = Stats.None;
+            
+            Value = _rand.Next(0, 300);
+            Type = (ItemType)_rand.Next(0, 3);
             switch (Type)
             {
                 case ItemType.Armor:
@@ -41,9 +41,14 @@ namespace MerchantRPG.Models.Engine.GameObjects
                     Equip = new Equipment(Type);
                     Name = Equip.Description;
                     StatModifier = Equip.AbilityLevel;
+                    Enum.TryParse(Equip.PrimaryStat, out Stats _Stat); ;
+                    Stat = _Stat;
+                    Value = Equip.AbilityLevel * _rand.Next(50, 100);
+                    Weight = (Math.Abs(Equip.AbilityLevel) + 1) * _rand.Next(2, 10);
                     break;
                 case ItemType.Goods:
                     Name = Names.Goods[_rand.Next(0, Names.Goods.Length)];
+                    Weight = _rand.Next(10, 1000);
                     break;
             }
         }

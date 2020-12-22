@@ -1,4 +1,5 @@
-﻿using MerchantRPG.Models.Engine.GameObjects;
+﻿using GameplayLoopCombat1.classes;
+using MerchantRPG.Models.Engine.GameObjects;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -14,12 +15,12 @@ namespace MerchantRPG.Models.Engine.Events
             this.EventAction = Event;
         }
 
-        public async Task<PlayerState> Event(PlayerState p)
+        public async Task<PlayerState> Event()
         {
             Console.WriteLine("Greetings! Today you're a humble merchant. Tomorrow you might be rich! Or as poor as you are right now.");
             Console.WriteLine("Speaking of which, lets get you setup.");
-            p.Currency = 100;
-            p.Inventory.Add(new InventoryItem()
+             Party.State.Currency = 100;
+             Party.State.Inventory.Add(new InventoryItem()
             {
                 Name = "Mule",
                 Weight = 100,
@@ -27,18 +28,18 @@ namespace MerchantRPG.Models.Engine.Events
                 Stat = Stats.Capacity
             });
 
-            p.NextContext = Context.Town;
-            p.CurrentContext = Context.Unknown;
-            p.Objective = "Rome";
-            p.ObjectiveDistance = 0;
+             Party.State.NextContext = Context.Town;
+             Party.State.CurrentContext = Context.Unknown;
+             Party.State.Objective = "Rome";
+             Party.State.ObjectiveDistance = 0;
 
             Console.WriteLine(string.Empty);
             Console.WriteLine("There we go. You've got a bit of cash in your pocket, and a mule to cart around your goods.");
-            Console.WriteLine($"Current Currency : {p.Currency}");
-            p.Inventory.ForEach(x => Console.WriteLine($"Inventory Item : {x.Name} | {x.Stat.ToString()} | {x.StatModifier - x.Weight} | "));
+            Console.WriteLine($"Current Currency : { Party.State.Currency}");
+             Party.State.Inventory.ForEach(x => Console.WriteLine($"Inventory Item : {x.Name} | {x.Stat.ToString()} | {x.StatModifier - x.Weight} | "));
             Console.WriteLine($"{Environment.NewLine}Hit Enter"); 
 
-            return p;
+            return Party.State;
         }
 
     }

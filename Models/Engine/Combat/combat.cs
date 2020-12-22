@@ -41,12 +41,10 @@ namespace GameplayLoopCombat1.classes
 
                 if (GameOver)
                 {
-                    Party.State.Capacity = Party.State.MaxCapacity;
+                    Console.WriteLine("Your entire party dead, the " + Participants.Where(p => p.Player = false && p.Health > 0).First().Name + " seems thoroughly delighted, as if having won a game. You lay face down in the dirt, sure you'll die this time.");
                     Party.State.Inventory.Clear();
                     Party.Members.Clear();
                     Party.Members.Add(Party.Lead);
-
-                    Console.WriteLine("Your entire party dead, the " + Participants.Where(p => p.Player = false && p.Health > 0).First().Name + " seems thoroughly delighted, as if having won a game. You lay face down in the dirt, sure you'll die this time.");
                     int lossOutcome = rand.Next(0, 100);
                     if (lossOutcome <= 5) {
                         Party.State.Currency = 0;
@@ -66,6 +64,7 @@ namespace GameplayLoopCombat1.classes
                         Party.State.Currency /= (lossOutcome / 10);
                         Console.WriteLine("Broken and beaten, you manage to crawl off with " + Party.State.Currency + " gold but none of your gear. You limp back to town.");
                     }
+
 
 
                     ClearStatuses();
@@ -212,26 +211,27 @@ namespace GameplayLoopCombat1.classes
             for(int n = 0; enemyCount > n; n++)
             {
                 int budget = enemyAbility / enemyCount;
+                budget -= 1;
                 int statPick = rand.Next(0, 3);
-                int str = 1 + (Int32)Math.Ceiling(budget * 0.3); //30% to str
+                int str = 1 + (Int32)Math.Floor(budget * 0.3); //30% to str
                 int dex = 0;
                 int intel = 0;
                 switch(statPick)
                 {
                     case 0:
-                        dex = (Int32)Math.Ceiling(budget * 0.5); //50% to main ability
-                        str += (Int32)Math.Ceiling(budget * 0.1);
-                        intel = (Int32)Math.Ceiling(budget * 0.1);
+                        dex = (Int32)Math.Floor(budget * 0.5); //50% to main ability
+                        str += (Int32)Math.Floor(budget * 0.1);
+                        intel = (Int32)Math.Floor(budget * 0.1);
                         break;
                     case 1:
-                        dex = (Int32)Math.Ceiling(budget * 0.1); 
-                        str += (Int32)Math.Ceiling(budget * 0.5);//50% to main ability
-                        intel = (Int32)Math.Ceiling(budget * 0.1);
+                        dex = (Int32)Math.Floor(budget * 0.1); 
+                        str += (Int32)Math.Floor(budget * 0.5);//50% to main ability
+                        intel = (Int32)Math.Floor(budget * 0.1);
                         break;
                     case 2:
-                        dex = (Int32)Math.Ceiling(budget * 0.1);
-                        str += (Int32)Math.Ceiling(budget * 0.1);
-                        intel = (Int32)Math.Ceiling(budget * 0.5);//50% to main ability
+                        dex = (Int32)Math.Floor(budget * 0.1);
+                        str += (Int32)Math.Floor(budget * 0.1);
+                        intel = (Int32)Math.Floor(budget * 0.5);//50% to main ability
                         break;
 
                 }

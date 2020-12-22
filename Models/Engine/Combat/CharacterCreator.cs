@@ -1,4 +1,5 @@
 ﻿using MerchantRPG.Models.Engine;
+using MerchantRPG.Models.Engine.GameObjects;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -60,11 +61,23 @@ namespace GameplayLoopCombat1.classes
             result = new Character(name, dex, str, intel);
             result.Player = true;
 
-            Console.WriteLine("Welcome to the world, " + result.Name + ". These are your skills:");
+            Console.WriteLine("Welcome to the world, " + result.Name + ". Over the course of your life you have learned these skills:");
             foreach(KeyValuePair<string, Ability> castable in Abilities.AbilityList.Where(entry => entry.Value.MeetsRequirements(result)))
             {
                 Console.WriteLine(castable.Key + " - " + castable.Value.Description);
             }
+            Console.WriteLine("---continue---");
+            Console.ReadLine();
+
+            Console.WriteLine("Today you're a humble merchant, " + result.Name + ". Tomorrow you might be rich! Or as poor as you are right now.");
+            Console.WriteLine("Speaking of which, here's your only possession - a mule. It'll help you carry the many things you're likely to aquire.");
+            Party.State.AddToInventory(new InventoryItem()
+            {
+                Name = "Mule",
+                Weight = 0,
+                StatModifier = 150,
+                Stat = Stats.Capacity
+            });
             Console.WriteLine("---continue---");
             Console.ReadLine();
 

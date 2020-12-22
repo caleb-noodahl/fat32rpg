@@ -26,7 +26,7 @@ namespace MerchantRPG.Models.Engine.GameObjects
                     Name = ((Places)rand.Next(0, Enum.GetValues(typeof(Places)).Length)).ToString(),
                     Rating = i * rand.Next(0, 3),
                     X = i * rand.Next(1, 300),
-                    Y = i * rand.Next(1, 300)
+                    Y = i * rand.Next(1, 300),
                 };
 
 

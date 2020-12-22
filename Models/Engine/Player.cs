@@ -1,4 +1,5 @@
-﻿using MerchantRPG.Models.Configuration;
+﻿using GameplayLoopCombat1.classes;
+using MerchantRPG.Models.Configuration;
 using MerchantRPG.Models.Engine.GameObjects;
 using System;
 using System.Collections.Generic;
@@ -23,23 +24,10 @@ namespace MerchantRPG.Models.Engine
                     Currency = this.Info.Currency,
                     Objective = this.Info.Objective,
                     ObjectiveDistance = this.Info.ObjectiveDistance,
-                    Capacity = CalculateCapacity()
                 };
             } }
 
-        private int CalculateCapacity()
-        {
-            int total = 0;
-            int modifier = 0;
-            this.Inventory.ForEach(x =>
-            {
-                total = x.Weight;
-                if (x.Stat == Stats.Capacity)
-                    modifier += x.StatModifier;
-            });
-            total = total - modifier < 0 ? (total - modifier) * -1 : total - modifier;
-            return total; 
-        }
+
 
         public List<InventoryItem> Inventory { get; set; } = new List<InventoryItem>(); 
 
@@ -64,7 +52,7 @@ namespace MerchantRPG.Models.Engine
 
         public async Task HandleGameEvent(GameEvent ev) 
         {
-            var state = await ev.EventAction(CurrentState);
+            var state = await ev.EventAction();
 
         }
     }

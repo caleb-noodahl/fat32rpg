@@ -47,7 +47,7 @@ namespace MerchantRPG.Services
 
                 for(int i = 0; i < events.Count; i++)
                 {
-                    var updatedPlayerState = await events[i](_player.CurrentState);
+                    var updatedPlayerState = await events[i]();
                     _player.UpdatePlayerState(updatedPlayerState);
                 }
                 

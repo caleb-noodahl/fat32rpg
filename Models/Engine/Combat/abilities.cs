@@ -20,19 +20,19 @@ namespace GameplayLoopCombat1.classes
         {
             //DEX
             {"Quick Attack", new Ability(new Requirement(2,1,1,0), QuickAttack, 1, 0, 1, "does dex * 1 dmg to up to 1 target" )},
-            {"MultiShot", new Ability(new Requirement(5,1,1,0), MultiShot, 5, 3, (long)0.5, "does dex * 0.5 dmg to up to 5 targets" )},
+            {"MultiShot", new Ability(new Requirement(5,1,1,0), MultiShot, 5, 3, 0.5, "does dex * 0.5 dmg to up to 5 targets" )},
             {"Evasion", new Ability(new Requirement(7,1,1,0), Evasion, 1, 2, 2, "evade dex * 2% of attacks until the end of combabt" )},
             {"Evasive Action", new Ability(new Requirement(10,1,1,0), Evasion, 3, 3, 2, "3 targets evade dex * 2% of attacks until the end of combabt" )},            
 
             //STR
             {"Strong Attack", new Ability(new Requirement(1,2,1,0), StrongAttack, 1, 0, 1, "does str * 1 dmg to up to 1 target" )},
-            {"Cleave", new Ability(new Requirement(1,5,1,0), Cleave, 3, 4, (long)0.7, "does str * 0.7 dmg to up to 3 targets" )},
-            {"Bleed", new Ability(new Requirement(1,7,1,0), Bleed, 1, 2, (long)0.3, "does str * 0.3 dmg to 1 target for 6 turns" )},
-            {"Cleave Bleed", new Ability(new Requirement(1,10,1,0), Bleed, 3, 4, (long)0.3, "does str * 0.3 dmg to 3 target for 6 turns" )},
+            {"Cleave", new Ability(new Requirement(1,5,1,0), Cleave, 3, 4, 0.7, "does str * 0.7 dmg to up to 3 targets" )},
+            {"Bleed", new Ability(new Requirement(1,7,1,0), Bleed, 1, 2, 0.3, "does str * 0.3 dmg to 1 target for 6 turns" )},
+            {"Cleave Bleed", new Ability(new Requirement(1,10,1,0), Bleed, 3, 4, 0.3, "does str * 0.3 dmg to 3 target for 6 turns" )},
 
             //INT
             {"Calculated Attack", new Ability(new Requirement(1,1,2,0), CalculatedAttack, 1, 0, 1, "does int * 1 dmg to up to 1 target" )},
-            {"Fireball", new Ability(new Requirement(1,1,5,0), Fireball, 3, 4, (long)0.7, "does int * 0.7 dmg to up tp 3 targets")},
+            {"Fireball", new Ability(new Requirement(1,1,5,0), Fireball, 3, 4, 0.7, "does int * 0.7 dmg to up tp 3 targets")},
             {"Heal", new Ability(new Requirement(1,1,3,0), Heal, 1, 2, 1, "heals for int * 1 to 1 target")},
             {"Group Heal", new Ability(new Requirement(1,1,8,0), Heal, 3, 4, 1, "heals for int * 1 to 3 targets")},
             {"Greater Fireball", new Ability(new Requirement(1,1,10,0), Fireball, 5, 4, 1, "does int * 1 dmg to up tp 5 targets")},
@@ -321,7 +321,7 @@ namespace GameplayLoopCombat1.classes
         public int MaxTargets { get; set; }
         public string Description { get; set; }
         public int Cooldown { get; set; }
-        public long DmgMod { get; set; }
+        public double DmgMod { get; set; }
 
         public Dictionary<Character, int> LastCast { get; set; } = new Dictionary<Character, int>();
 
@@ -349,7 +349,7 @@ namespace GameplayLoopCombat1.classes
             return print;
         }
 
-        public Ability(Requirement _reqs, AbilityAction _action, int _maxTargets, int _cooldown, long _dmgMod, string _description)
+        public Ability(Requirement _reqs, AbilityAction _action, int _maxTargets, int _cooldown, double _dmgMod, string _description)
         {
             Reqs = _reqs;
             Action = _action;
