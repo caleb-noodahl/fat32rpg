@@ -1,4 +1,5 @@
-﻿using MerchantRPG.Models.Configuration;
+﻿using GameplayLoopCombat1.classes;
+using MerchantRPG.Models.Configuration;
 using MerchantRPG.Models.Engine.GameObjects;
 using Microsoft.Extensions.Options;
 using System;
@@ -16,11 +17,13 @@ namespace MerchantRPG.Models.Engine.Events
 
         public TownEvent(string name, TownSettings towns, InventorySettings invSettings)
         {
+            Random rand = new Random();
             this.Context = Context.Town;
             this.Name = name == string.Empty ? "Rome" : name;
             this.EventAction = Event;
             _i = invSettings.Default;
-            _towns = towns; 
+            _towns = towns;
+            _towns.InnName = "The " + Names.Adjective(rand.Next(0, Enum.GetValues(typeof(Names.Adjectives)).Length)) + " " + Names.Things[rand.Next(0, Names.Things.Length)];
         }
 
         public async Task<PlayerState> Event(PlayerState s)
@@ -31,15 +34,43 @@ namespace MerchantRPG.Models.Engine.Events
             while(!IsComplete)
             {
                 Console.WriteLine("What is it you'd like to do?");
-                Console.WriteLine($"buy or travel{Environment.NewLine}"); 
+                Console.WriteLine($"buy or sell or travel or rest or fight{Environment.NewLine}"); 
                 switch(Console.ReadLine().ToLower())
                 {
                     case "buy": s = DisplayBuyMenu(s);  break;
+                    case "sell": s = DisplayBuyMenu(s); break;
                     case "travel": s = SetTravelContextAndExit(s); IsComplete = true; break;
+                    case "rest": s = Rest(s); break;
+                    case "fight": new GameplayLoopCombat1.classes.Combat(Party.Members); break;
                     default: Console.WriteLine($"I'm afraid that isn't an option...{Environment.NewLine}"); break;
                 }
             }
             return s;
+        }
+
+        private PlayerState Rest(PlayerState s)
+        {
+            int price = new Random().Next(1, 5) * 10;
+            Console.WriteLine("Welcome to " + _towns.InnName + ", a night here costs " + price + " gold. You staying? (y/n)");
+            switch(Console.ReadLine())
+            {
+                case "y":
+                    if (s.Spend(price))
+                    {
+                        Party.Members.ForEach(member =>
+                        {
+                            member.DoDamage(-10);
+                        });
+                        Console.WriteLine("Party healed for 10 at the local inn");
+                    }
+                    else
+                        Console.WriteLine("You can't afford " + price + "? Get a job you bumb!");
+                    break;
+                default:
+                    break;
+            }
+            return s;
+
         }
 
         private PlayerState SetTravelContextAndExit(PlayerState s)
@@ -124,6 +155,7 @@ namespace MerchantRPG.Models.Engine.Events
                         
                     s.Currency += (long)item.Value * amount * -1; 
                     var totalItemType = s.Inventory.Where(x => x.Name.ToLower().Contains(selection[1].ToLower())).Count();
+                    item.Equip.DistributeEquipment(Party.Lead, true);
                     Console.WriteLine($"You now have {totalItemType} {item.Name}(s) in your inventory{Environment.NewLine}");
                     Console.WriteLine($"Your currency : {s.Currency}. Free capacity : {s.Capacity} ");
                 }

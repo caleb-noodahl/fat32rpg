@@ -14,20 +14,20 @@ namespace MerchantRPG.Models.Configuration
         {
             TownDefintions = townDefs;
         }
-        public Point Coords { get; set; }
 
         public int X { get; set; }
         public int Y { get; set; }
+        public string InnName { get; set; }
 
 
         public double GetDistance(TownEvent town)
         {
-            return Math.Pow(X - town._towns.X, 2) + Math.Pow(Y - town._towns.Y, 2);
+            return Math.Sqrt(Math.Pow(X - town._towns.X, 2) + Math.Pow(Y - town._towns.Y, 2));
         }
 
         public double GetDistance(TownDefintion town)
         {
-            return Math.Pow(X - town.X, 2) + Math.Pow(Y - town.Y, 2);
+            return Math.Sqrt(Math.Pow(X - town.X, 2) + Math.Pow(Y - town.Y, 2));
         }
     }
 

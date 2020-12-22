@@ -14,9 +14,9 @@ namespace GameplayLoopCombat1.classes
         public CharacterCreator()
         {
             Console.WriteLine("Please create a character by adding " + CharacterPoints + " points between the following 3 attributes");
-            Console.WriteLine("Dexterity - Determines your turn order in combat and strength of dexterity skills like MultiShot");
+            Console.WriteLine("Dexterity - Determines your turn order in combat, likelihood to dodge, and strength of dexterity skills like MultiShot");
             Console.WriteLine("Strength - Determines your maximum health and srength of skills like Cleave");
-            Console.WriteLine("Intelligence - Determines the strength of magical abilities");
+            Console.WriteLine("Intelligence - Determines the strength of magical abilities, including the ability to heal outside towns");
             Console.WriteLine("You have " + CharacterPoints + " left. How many to Dexterity?");
             int dex = -1;
             while (dex > CharacterPoints || dex < 0)
@@ -46,8 +46,8 @@ namespace GameplayLoopCombat1.classes
 
             Console.WriteLine("Input a difficulty multiplier:");
             Console.WriteLine("0.5 = easy");
-            Console.WriteLine("1 = normal");
-            Console.WriteLine("1.5 = hard");
+            Console.WriteLine("0.75 = normal");
+            Console.WriteLine("1 = hard");
 
             double diff = -1;
             while (diff < 0)

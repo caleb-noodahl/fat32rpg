@@ -82,6 +82,8 @@ namespace GameplayLoopCombat1.classes
                 dmg *= effect.DamageModifier;
             });
             Health -= dmg;
+            if (Health > HealthMax)
+                Health = HealthMax;
             return dmg;
         }
 

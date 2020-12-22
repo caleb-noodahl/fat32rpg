@@ -46,6 +46,16 @@ namespace MerchantRPG.Models.Engine
 
         }
 
+        public bool Spend(long amt)
+        {
+            if(Currency >= amt)
+            {
+                Currency -= amt;
+                return true;
+            }
+            return false;
+        }
+
     }
 
 }

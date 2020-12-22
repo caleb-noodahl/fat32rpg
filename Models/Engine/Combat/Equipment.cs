@@ -18,6 +18,25 @@ namespace GameplayLoopCombat1.classes
             Description = description;
         }
 
+        public Equipment(ItemType item)
+        {
+            Random rand = new Random();
+            Dexterity = rand.Next(0, Party.Lead.AbilityLevel / 5);
+            Strength = rand.Next(0, Party.Lead.AbilityLevel / 5);
+            Intelligence = rand.Next(0, Party.Lead.AbilityLevel / 5);
+            string adj = Names.Adjective(rand.Next(0, Enum.GetValues(typeof(Adjectives)).Length));
+            switch (item)
+            {
+                case ItemType.Armor:
+                    Description = adj + " " + Names.Metals[rand.Next(0, Names.Metals.Length)] + " " + Names.Armor[rand.Next(0, Names.Armor.Length)] + " of " + PrimaryStat;
+                    break;
+                case ItemType.Weapons:
+                    Description = adj + " " + Names.Metals[rand.Next(0, Names.Metals.Length)] + " " + Names.Weapons[rand.Next(0, Names.Weapons.Length)] + " of " + PrimaryStat;
+                    break;
+            }
+                
+        }
+
         public Equipment(InventoryItem ii)
         {
             this.Description = ii.Name;
@@ -91,9 +110,12 @@ namespace GameplayLoopCombat1.classes
             DistributeEquipment(owner);
         }
 
-        public void DistributeEquipment(Character owner)
+        public void DistributeEquipment(Character owner, bool shop = false)
         {
-            Console.WriteLine("You've found: " + Description + " on " + owner.Name + " corpse.");
+            string opening = "You've found: " + Description;
+            if (!shop)
+                opening += " on " + owner.Name + " corpse.";
+            Console.WriteLine(opening);
             Console.WriteLine("Dex: " + Dexterity + " - Str: " + Strength + " - Int: " + Intelligence);
             Console.WriteLine("Do you wish to equip it? y/n");
             string doEquip = Console.ReadLine();
