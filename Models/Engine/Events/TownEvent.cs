@@ -51,7 +51,7 @@ namespace MerchantRPG.Models.Engine.Events
         private PlayerState Rest(PlayerState s)
         {
             int price = new Random().Next(1, 5) * 10;
-            Console.WriteLine("Welcome to " + _towns.InnName + ", a night here costs " + price + " gold. You staying? (y/n)");
+            Console.WriteLine("This is " + _towns.InnName + ", a night here costs " + price + " gold. You staying? (y/n)");
             switch(Console.ReadLine())
             {
                 case "y":

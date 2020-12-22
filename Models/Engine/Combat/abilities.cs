@@ -19,23 +19,23 @@ namespace GameplayLoopCombat1.classes
         public static Dictionary<string, Ability> AbilityList = new Dictionary<string, Ability>()
         {
             //DEX
-            {"Quick Attack", new Ability(new Requirement(2,1,1,0), QuickAttack, 1, 0, "does dex * 1 dmg to up to 1 target" )},
-            {"MultiShot", new Ability(new Requirement(5,1,1,0), MultiShot, 5, 3, "does dex * 0.5 dmg to up to 5 targets" )},
-            {"Evasion", new Ability(new Requirement(7,1,1,0), Evasion, 1, 2, "evade dex * 2% of attacks until the end of combabt" )},
-            {"Evasive Action", new Ability(new Requirement(10,1,1,0), Evasion, 3, 3, "3 targets evade dex * 2% of attacks until the end of combabt" )},            
+            {"Quick Attack", new Ability(new Requirement(2,1,1,0), QuickAttack, 1, 0, 1, "does dex * 1 dmg to up to 1 target" )},
+            {"MultiShot", new Ability(new Requirement(5,1,1,0), MultiShot, 5, 3, (long)0.5, "does dex * 0.5 dmg to up to 5 targets" )},
+            {"Evasion", new Ability(new Requirement(7,1,1,0), Evasion, 1, 2, 2, "evade dex * 2% of attacks until the end of combabt" )},
+            {"Evasive Action", new Ability(new Requirement(10,1,1,0), Evasion, 3, 3, 2, "3 targets evade dex * 2% of attacks until the end of combabt" )},            
 
             //STR
-            {"Strong Attack", new Ability(new Requirement(1,2,1,0), StrongAttack, 1, 0, "does str * 1 dmg to up to 1 target" )},
-            {"Cleave", new Ability(new Requirement(1,5,1,0), Cleave, 3, 4, "does str * 0.7 dmg to up to 3 targets" )},
-            {"Bleed", new Ability(new Requirement(1,7,1,0), Bleed, 1, 2, "does str * 0.3 dmg to 1 target for 6 turns" )},
-            {"Cleave Bleed", new Ability(new Requirement(1,10,1,0), Bleed, 3, 4, "does str * 0.3 dmg to 3 target for 6 turns" )},
+            {"Strong Attack", new Ability(new Requirement(1,2,1,0), StrongAttack, 1, 0, 1, "does str * 1 dmg to up to 1 target" )},
+            {"Cleave", new Ability(new Requirement(1,5,1,0), Cleave, 3, 4, (long)0.7, "does str * 0.7 dmg to up to 3 targets" )},
+            {"Bleed", new Ability(new Requirement(1,7,1,0), Bleed, 1, 2, (long)0.3, "does str * 0.3 dmg to 1 target for 6 turns" )},
+            {"Cleave Bleed", new Ability(new Requirement(1,10,1,0), Bleed, 3, 4, (long)0.3, "does str * 0.3 dmg to 3 target for 6 turns" )},
 
             //INT
-            {"Calculated Attack", new Ability(new Requirement(1,1,2,0), CalculatedAttack, 1, 0, "does int * 1 dmg to up to 1 target" )},
-            {"Fireball", new Ability(new Requirement(1,1,5,0), Fireball, 3, 4, "does int * 0.7 dmg to up tp 3 targets")},
-            {"Heal", new Ability(new Requirement(1,1,3,0), Heal, 1, 2, "heals for int * 1 to 1 target")},
-            {"Group Heal", new Ability(new Requirement(1,1,8,0), Heal, 3, 4, "heals for int * 1 to 3 targets")},
-            {"Greater Fireball", new Ability(new Requirement(1,1,10,0), Fireball, 5, 4, "does int * 1 dmg to up tp 5 targets")},
+            {"Calculated Attack", new Ability(new Requirement(1,1,2,0), CalculatedAttack, 1, 0, 1, "does int * 1 dmg to up to 1 target" )},
+            {"Fireball", new Ability(new Requirement(1,1,5,0), Fireball, 3, 4, (long)0.7, "does int * 0.7 dmg to up tp 3 targets")},
+            {"Heal", new Ability(new Requirement(1,1,3,0), Heal, 1, 2, 1, "heals for int * 1 to 1 target")},
+            {"Group Heal", new Ability(new Requirement(1,1,8,0), Heal, 3, 4, 1, "heals for int * 1 to 3 targets")},
+            {"Greater Fireball", new Ability(new Requirement(1,1,10,0), Fireball, 5, 4, 1, "does int * 1 dmg to up tp 5 targets")},
         };
 
         #region Ability Actions
@@ -46,7 +46,7 @@ namespace GameplayLoopCombat1.classes
             AbilityResponse resp = new AbilityResponse();
 
             //Requirements
-            resp.Usable = AbilityList["Quick Attack"].MeetsRequirements(caster, turn);
+            resp.Usable = AbilityList[abilityName].MeetsRequirements(caster, turn);
             if (!resp.Usable)
             {
                 resp.Message = "The requirements for Quick Attack are" + AbilityList["Quick Attack"].PrintReqs();
@@ -55,11 +55,11 @@ namespace GameplayLoopCombat1.classes
 
             //Ability Actions
             int targetCount = targets.Length;
-            if (targetCount > AbilityList["Quick Attack"].MaxTargets)
-                targetCount = AbilityList["Quick Attack"].MaxTargets;
+            if (targetCount > AbilityList[abilityName].MaxTargets)
+                targetCount = AbilityList[abilityName].MaxTargets;
             for (int tCount = 0; tCount < targetCount; tCount++)
             {
-                double dmg = caster.Dexterity;
+                double dmg = caster.Dexterity * AbilityList[abilityName].DmgMod;
                 dmg = targets[tCount].DoDamage(dmg);
                 resp.Message += " " + targets[tCount].Name + " hit for " + dmg;
             }
@@ -85,7 +85,7 @@ namespace GameplayLoopCombat1.classes
                 targetCount = AbilityList["MultiShot"].MaxTargets;
             for (int tCount = 0; tCount < targetCount; tCount++)
             {
-                double dmg = caster.Dexterity * 0.5;
+                double dmg = caster.Dexterity * AbilityList[abilityName].DmgMod;
                 dmg = targets[tCount].DoDamage(dmg);
                 resp.Message += " " + targets[tCount].Name + " hit for " + dmg;
             }
@@ -111,7 +111,7 @@ namespace GameplayLoopCombat1.classes
                 targetCount = AbilityList[abilityName].MaxTargets;
             for (int tCount = 0; tCount < targetCount; tCount++)
             {
-                double evasion = caster.Dexterity * 2;
+                double evasion = caster.Dexterity * AbilityList[abilityName].DmgMod;
                 StatusEffect status = new StatusEffect(abilityName, "Evading " + evasion + "% of attacks")
                 {
                     MissPercent = evasion
@@ -143,7 +143,7 @@ namespace GameplayLoopCombat1.classes
                 targetCount = AbilityList[abilityName].MaxTargets;
             for (int tCount = 0; tCount < targetCount; tCount++)
             {
-                double dmg = caster.Strength;
+                double dmg = caster.Strength * AbilityList[abilityName].DmgMod;
                 dmg = targets[tCount].DoDamage(dmg);
                 resp.Message += " " + targets[tCount].Name + " hit for " + dmg;
             }
@@ -169,7 +169,7 @@ namespace GameplayLoopCombat1.classes
                 targetCount = AbilityList[abilityName].MaxTargets;
             for (int tCount = 0; tCount < targetCount; tCount++)
             {
-                double dmg = caster.Strength * 0.7;
+                double dmg = caster.Strength * AbilityList[abilityName].DmgMod;
                 dmg = targets[tCount].DoDamage(dmg);
                 resp.Message += " " + targets[tCount].Name + " hit for " + dmg;
             }
@@ -195,7 +195,7 @@ namespace GameplayLoopCombat1.classes
                 targetCount = AbilityList[abilityName].MaxTargets;
             for (int tCount = 0; tCount < targetCount; tCount++)
             {
-                double dmg = caster.Strength * 0.3;
+                double dmg = caster.Strength * AbilityList[abilityName].DmgMod;
                 StatusEffect status = new StatusEffect(abilityName, "Bleed for " + dmg + " damage per turn")
                 {
                     EffectAction = c => 
@@ -231,7 +231,7 @@ namespace GameplayLoopCombat1.classes
                 targetCount = AbilityList[abilityName].MaxTargets;
             for (int tCount = 0; tCount < targetCount; tCount++)
             {
-                double dmg = caster.Intelligence;
+                double dmg = caster.Intelligence * AbilityList[abilityName].DmgMod;
                 dmg = targets[tCount].DoDamage(dmg);
                 resp.Message += " " + targets[tCount].Name + " hit for " + dmg;
             }
@@ -257,7 +257,7 @@ namespace GameplayLoopCombat1.classes
                 targetCount = AbilityList[abilityName].MaxTargets;
             for (int tCount = 0; tCount < targetCount; tCount++)
             {
-                double dmg = caster.Intelligence * 0.7;
+                double dmg = caster.Intelligence * AbilityList[abilityName].DmgMod;
                 dmg = targets[tCount].DoDamage(dmg);
                 resp.Message += " " + targets[tCount].Name + " hit for " + dmg;
             }
@@ -284,7 +284,7 @@ namespace GameplayLoopCombat1.classes
             for (int tCount = 0; tCount < targetCount; tCount++)
             {
                 double heal = caster.Intelligence;
-                targets[tCount].DoDamage(heal * -1);
+                targets[tCount].DoDamage(heal * -1 * AbilityList[abilityName].DmgMod);
                 if (targets[tCount].Health > targets[tCount].HealthMax)
                     targets[tCount].Health = targets[tCount].HealthMax;
                 resp.Message += " " + targets[tCount].Name + " healed for " + heal;
@@ -321,6 +321,7 @@ namespace GameplayLoopCombat1.classes
         public int MaxTargets { get; set; }
         public string Description { get; set; }
         public int Cooldown { get; set; }
+        public long DmgMod { get; set; }
 
         public Dictionary<Character, int> LastCast { get; set; } = new Dictionary<Character, int>();
 
@@ -348,13 +349,14 @@ namespace GameplayLoopCombat1.classes
             return print;
         }
 
-        public Ability(Requirement _reqs, AbilityAction _action, int _maxTargets, int _cooldown, string _description)
+        public Ability(Requirement _reqs, AbilityAction _action, int _maxTargets, int _cooldown, long _dmgMod, string _description)
         {
             Reqs = _reqs;
             Action = _action;
             MaxTargets = _maxTargets;
             Description = _description;
             Cooldown = _cooldown;
+            DmgMod = _dmgMod;
         }
 
     }

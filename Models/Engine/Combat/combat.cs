@@ -41,7 +41,33 @@ namespace GameplayLoopCombat1.classes
 
                 if (GameOver)
                 {
-                    Console.WriteLine("You lose!");
+                    Party.State.Capacity = Party.State.MaxCapacity;
+                    Party.State.Inventory.Clear();
+                    Party.Members.Clear();
+                    Party.Members.Add(Party.Lead);
+
+                    Console.WriteLine("Your entire party dead, the " + Participants.Where(p => p.Player = false && p.Health > 0).First().Name + " seems thoroughly delighted, as if having won a game. You lay face down in the dirt, sure you'll die this time.");
+                    int lossOutcome = rand.Next(0, 100);
+                    if (lossOutcome <= 5) {
+                        Party.State.Currency = 0;
+                        Console.WriteLine("There was no glory in your final moments. You lay on the roadside waiting for the travelers, theives, anything. You die bleeding out, your corpse only found and looted once the stench attracted passersby. Your seemingly lifeless corpse is dragged back to town for burial when you awake!");
+                        Party.Lead.Health = 1;
+                    }
+                    else if(lossOutcome <= 20)
+                    {
+                        Party.State.Currency = 0;
+                        Console.WriteLine("As you feel yourself slipping away you hear voices. You moan, but they go straight for your caravan. Once of the voices stands above you, you feel them rifle through your pockets and take everything you own.");
+                        Console.WriteLine("You don't know how long later, but you wake up in a trailer on a makeshift hay bed. A grumpy old man with a disaproving look on his face sees you move.");
+                        Console.WriteLine("'You're lucky I found you. Don't worry, we'll be in town soon.'");
+                        Party.Members.Add(new Character(Party.Lead.AbilityLevel-5, true, false));
+                    }
+                    else
+                    {
+                        Party.State.Currency /= (lossOutcome / 10);
+                        Console.WriteLine("Broken and beaten, you manage to crawl off with " + Party.State.Currency + " gold but none of your gear. You limp back to town.");
+                    }
+
+
                     ClearStatuses();
                     return;
                 }

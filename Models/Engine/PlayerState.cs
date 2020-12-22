@@ -6,7 +6,7 @@ using MerchantRPG.Models.Engine.GameObjects;
 
 namespace MerchantRPG.Models.Engine
 {
-    public class PlayerState : Character
+    public class PlayerState
     {
         public Context CurrentContext { get; set; }
         public Context NextContext { get; set; }
@@ -16,14 +16,17 @@ namespace MerchantRPG.Models.Engine
         public string Objective { get; set; }
         public double ObjectiveDistance { get; set; }
         public int Capacity { get; set; } = 100;
+        public int MaxCapacity { get; set; } = 100;
+        public string Name { get; set; }
 
-        public PlayerState() 
+        public PlayerState()
         {
-            Currency = (long)Math.Floor(Party.Difficulty * Currency);
-            Capacity = (int)Math.Floor(Party.Difficulty * Capacity);
+            Currency = (long)Math.Floor((1.5 - Party.Difficulty) * Currency);
+            MaxCapacity = (int)Math.Floor((1.5 - Party.Difficulty) * Capacity);
+            Capacity = MaxCapacity;
         }
 
-        public PlayerState(string name, int _dex, int _str, int _int) : base(name, _dex, _str,_int)
+        public PlayerState(string name, int _dex, int _str, int _int)
         {
             this.Name = name;
             CurrentContext = Context.Unknown;
