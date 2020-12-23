@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GameplayLoopCombat1.classes
+namespace MerchantRPG.Models.Engine.Combat
 {
     public class CharacterCreator
     {

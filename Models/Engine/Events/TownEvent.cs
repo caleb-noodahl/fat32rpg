@@ -1,4 +1,4 @@
-﻿using GameplayLoopCombat1.classes;
+﻿using MerchantRPG.Models.Engine.Combat;
 using MerchantRPG.Models.Configuration;
 using MerchantRPG.Models.Engine.GameObjects;
 using Microsoft.Extensions.Options;
@@ -42,7 +42,7 @@ namespace MerchantRPG.Models.Engine.Events
                     case "sell": DisplaySellMenu(); break;
                     case "travel": SetTravelContextAndExit(); IsComplete = true; break;
                     case "rest": Rest(); break;
-                    case "fight": new GameplayLoopCombat1.classes.Combat(Party.Members); break;
+                    case "fight": new MerchantRPG.Models.Engine.Combat.Combat(Party.Members); break;
                     case "recruit": Recruit();  break;
                     default: Console.WriteLine($"I'm afraid that isn't an option...{Environment.NewLine}"); break;
                 }

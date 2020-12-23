@@ -1,4 +1,4 @@
-﻿using GameplayLoopCombat1.classes;
+﻿using MerchantRPG.Models.Engine.Combat;
 using System;
 using System.Collections.Generic;
 using System.Text;

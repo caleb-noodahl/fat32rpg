@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GameplayLoopCombat1.classes
+namespace MerchantRPG.Models.Engine.Combat
 {
     public class Equipment : DSI
     {
@@ -96,7 +96,7 @@ namespace GameplayLoopCombat1.classes
             this.Description = ii.Name;
             this.Strength = ii.Stat == Stats.Strength ? Strength + ii.StatModifier : this.Strength;
             this.Dexterity = ii.Stat == Stats.Dexterity ? Dexterity + ii.StatModifier : this.Dexterity;
-            this.Intelligence = ii.Stat == Stats.Intelligencge ? ii.StatModifier : this.Intelligence;
+            this.Intelligence = ii.Stat == Stats.Intelligence ? ii.StatModifier : this.Intelligence;
         }
 
         public Equipment(Character owner)

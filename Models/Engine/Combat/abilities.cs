@@ -12,7 +12,7 @@ using MerchantRPG.Models.Engine.Combat;
  */
 #endregion
 
-namespace GameplayLoopCombat1.classes
+namespace MerchantRPG.Models.Engine.Combat
 {
     public static class Abilities
     {

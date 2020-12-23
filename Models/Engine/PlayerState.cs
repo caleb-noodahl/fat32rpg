@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Linq;
-using GameplayLoopCombat1.classes;
+using MerchantRPG.Models.Engine.Combat;
 using MerchantRPG.Models.Engine.Events;
 using MerchantRPG.Models.Engine.GameObjects;
 
@@ -89,7 +89,7 @@ namespace MerchantRPG.Models.Engine
 
             if (buying.Type == ItemType.Goods)
             {
-                valueForGoods = (long)(buying.Value / (double)buying.Weight * (double)amount);
+                valueForGoods = (long)(buying.Value / (double)buying.Weight * (double)amount * buyingFrom._towns.priceMods[buying.Type]);
                 weightForGoods = amount;
                 cost = valueForGoods;
                 
@@ -174,7 +174,7 @@ namespace MerchantRPG.Models.Engine
             double soldVal = selling.Value * sellingTo._towns.priceMods[selling.Type];
             Currency += (long)soldVal;
 
-            Console.WriteLine("Successfully sold " + selling.Name + " to the shop at " + selling.Name + " for " + soldVal);
+            Console.WriteLine("Successfully sold " + selling.Name + " to the shop at " + sellingTo.Name + " for " + soldVal);
             return true;
         }
 

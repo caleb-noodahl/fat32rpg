@@ -1,4 +1,4 @@
-﻿using GameplayLoopCombat1.classes;
+﻿using MerchantRPG.Models.Engine.Combat;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -25,7 +25,7 @@ namespace MerchantRPG.Models.Engine.Events
             Destination = _destination;
             Console.WriteLine("You set out for " + Destination.Name + ", and as you do " + Origin.Name + " shrinks in the distance.");
             
-            while(!(Progress <= 0) || !(Progress >= Distance))
+            while(!(Progress <= 0) && !(Progress >= Distance))
             {
                 if (Forward > 0)
                     Console.WriteLine(Distance - Progress + " miles to go.");
@@ -74,7 +74,7 @@ namespace MerchantRPG.Models.Engine.Events
             Console.WriteLine("Traveling to " + ((Forward > 0) ? Destination.Name : Origin.Name) + "...");
             Progress += Forward;
             if (rand.Next(1, 100) <= 5 * miles)
-                new GameplayLoopCombat1.classes.Combat(Party.Members);
+                new MerchantRPG.Models.Engine.Combat.Combat(Party.Members);
         }
         public void Camp()
         {
@@ -83,7 +83,7 @@ namespace MerchantRPG.Models.Engine.Events
             if(rand.Next(1, 100) < 33)
             {
                 Console.WriteLine("As you lay down to sleep you hear a scream - it's an attack!");
-                new GameplayLoopCombat1.classes.Combat(Party.Members);
+                new MerchantRPG.Models.Engine.Combat.Combat(Party.Members);
             }
             else
             {

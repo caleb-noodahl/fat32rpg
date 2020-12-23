@@ -1,4 +1,4 @@
-﻿using GameplayLoopCombat1.classes;
+﻿using MerchantRPG.Models.Engine.Combat;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -70,6 +70,6 @@ namespace MerchantRPG.Models.Engine.GameObjects
         Armor,
         Dexterity,
         Strength,
-        Intelligencge
+        Intelligence
     }
 }
