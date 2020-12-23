@@ -28,6 +28,7 @@ namespace MerchantRPG.Models.Engine.Events
 
         public async Task<PlayerState> Event()
         {
+            IsComplete = false;
             Console.WriteLine($"-===========-");
             Console.WriteLine($"Welcome to {this.Name}, " + Party.State.Name);
 
@@ -136,10 +137,9 @@ namespace MerchantRPG.Models.Engine.Events
                 Console.WriteLine($"That selection isn't available..");
                 SetTravelContextAndExit(); 
             }
-            Party.State.Currency = 0;
-            Party.State.NextContext = Context.Travel;
-            Party.State.Objective = selection.ToLower();
-            Party.State.ObjectiveDistance = _towns.GetDistance(objective);
+
+            new TravelEvent(this, Map.towns.First(t=>t.Name == objective.Name));
+
             return Party.State;
         }
 

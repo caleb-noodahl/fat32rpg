@@ -40,7 +40,7 @@ namespace MerchantRPG.Models.Engine.GameObjects
             }
             foreach (KeyValuePair<TownDefintion, InventorySettings> val in _towns)
             {
-                response.Add(new TownEvent(val.Key.Name, new TownSettings(_townDefs), val.Value));
+                response.Add(new TownEvent(val.Key.Name, new TownSettings(_townDefs) { X = val.Key.X, Y = val.Key.Y }, val.Value));
             }
 
             towns = response;

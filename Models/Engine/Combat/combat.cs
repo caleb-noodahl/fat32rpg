@@ -128,8 +128,8 @@ namespace GameplayLoopCombat1.classes
                     {
                         int npcChoice = rand.Next(0, castable.Count());
                         KeyValuePair<string, Ability>[] castableArr = castable.ToArray();
-                        List<Character> playerTargets = Participants.Where(chars => chars.Player == true).ToList();
-                        List<Character> friendlyTargets = Participants.Where(chars => chars.Player == false).ToList();
+                        List<Character> playerTargets = Participants.Where(chars => chars.Player == true && chars.Health > 0).ToList();
+                        List<Character> friendlyTargets = Participants.Where(chars => chars.Player == false && chars.Health > 0).ToList();
 
                         if (castableArr[npcChoice].Key.Contains("Wait") && castableArr.Length > 1)
                         {
@@ -192,7 +192,7 @@ namespace GameplayLoopCombat1.classes
             Console.WriteLine("Who would you like to target with " + castableArr[choice - 1].Key + "?");
             Console.WriteLine("0. Finished selecting targets");
             int targetOption = 1;
-            foreach (Character character in Participants)
+            foreach (Character character in Participants.Where(p => p.Health > 0))
             {
                 
                 Console.WriteLine(targetOption + "." + character.Name + " - Health: " + character.Health);
