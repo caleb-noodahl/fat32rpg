@@ -79,9 +79,19 @@ namespace GameplayLoopCombat1.classes
                     {
                         foreach(Character enemy in Participants.Where(p => p.Health <= 0 && !p.Player))
                         {
-                            new Equipment(enemy);
+                            if(rand.Next(0,2) == 0)
+                                new Equipment(enemy);
                         }
                     }
+                    foreach (Character ally in Participants.Where(p => p.Health <= 0 && p.Player))
+                    {
+                        Console.WriteLine(ally.Name + " has died. You recover their gear.");
+                        ally.Equip.ForEach(e => 
+                        {
+                            e.DistributeEquipment(ally);
+                        });
+                    }
+
                     return;
                 }
                     
