@@ -107,6 +107,7 @@ namespace MerchantRPG.Models.Engine.Events
                         if (Party.State.Spend(merc.AbilityLevel * 50))
                         {
                             Party.Members.Add(merc);
+                            _towns.Mercs.Remove(merc);
                             Console.WriteLine(merc.Name + " has joined the party!");
                         }
                         else
