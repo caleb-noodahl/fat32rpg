@@ -48,7 +48,7 @@ namespace GameplayLoopCombat1.classes
             {"Greater Heal", new Ability(new Requirement(0,0,12,0), Heal, 1, 2, 2, "heals for int * 2 to 1 target")},
             {"Group Minor Stimulant", new Ability(new Requirement(3,3,10,0), Stimulant, 3, 2, 1, "buff 3 targets for +2 to all stats for 3 turns")},
             {"Stimulant", new Ability(new Requirement(3,3,10,0), Stimulant, 1, 2, 5, "buff 1 targets for +5 to all stats for 3 turns")},
-            {"Lightning Strike", new Ability(new Requirement(0,0,11,0), IntelligenceAttack, 1, 4, 1, "does int * 2 dmg to 1 targets")},
+            {"Lightning Strike", new Ability(new Requirement(0,0,11,0), IntelligenceAttack, 1, 4, 2, "does int * 2 dmg to 1 targets")},
         };
 
         #region Ability Actions
@@ -158,7 +158,8 @@ namespace GameplayLoopCombat1.classes
                 double dmgMod = caster.Dexterity * AbilityList[abilityName].DmgMod;
                 StatusEffect status = new StatusEffect(abilityName, "Increases damage taken by " + dmgMod + "%")
                 {
-                     DamageModifier = dmgMod
+                     DamageModifier = dmgMod,
+                     Turns = 2
                 };
 
                 targets[tCount].Effects.Add(status);
@@ -354,17 +355,18 @@ namespace GameplayLoopCombat1.classes
             for (int tCount = 0; tCount < targetCount; tCount++)
             {
                 double block = caster.Strength * AbilityList[abilityName].DmgMod;
-                if(block > 75)
+                if(block > 0.75)
                 {
-                    block = 75;
+                    block = 0.75;
                 }
                 StatusEffect status = new StatusEffect(abilityName, "Blocking " + block + "% of incoming damage")
                 {
-                    DamageModifier = 1 - block
+                    DamageModifier = 1 - block,
+                    Turns = 2
                 };
 
                 targets[tCount].Effects.Add(status);
-                resp.Message += " " + targets[tCount].Name + " is blocking " + block + "% of incoming damage";
+                resp.Message += " " + targets[tCount].Name + " is blocking " + (block * 100) + "% of incoming damage";
             }
 
             return resp;

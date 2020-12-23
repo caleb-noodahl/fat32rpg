@@ -139,7 +139,7 @@ namespace GameplayLoopCombat1.classes
                             npcChoice = rand.Next(0, castable.Count());
                         }
 
-                        if (castableArr[npcChoice].Key.Contains("Heal") || castableArr[npcChoice].Key.Contains("Evasion") || castableArr[npcChoice].Key.Contains("Stimulant"))
+                        if (castableArr[npcChoice].Key.Contains("Heal") || castableArr[npcChoice].Key.Contains("Evasion") || castableArr[npcChoice].Key.Contains("Stimulant") || castableArr[npcChoice].Key.Contains("Block") || castableArr[npcChoice].Key.Contains("Throw Sand"))
                         {
                             playerTargets = friendlyTargets;
                         }

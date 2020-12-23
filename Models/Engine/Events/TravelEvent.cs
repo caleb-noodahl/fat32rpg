@@ -25,7 +25,7 @@ namespace MerchantRPG.Models.Engine.Events
             Destination = _destination;
             Console.WriteLine("You set out for " + Destination.Name + ", and as you do " + Origin.Name + " shrinks in the distance.");
             
-            while(!(Progress == 0) || !(Progress == Distance))
+            while(!(Progress <= 0) || !(Progress >= Distance))
             {
                 if (Forward > 0)
                     Console.WriteLine(Distance - Progress + " miles to go.");
@@ -61,7 +61,7 @@ namespace MerchantRPG.Models.Engine.Events
                     
             }
 
-            if (Progress == 0)
+            if (Progress <= 0)
                 Origin.Event();
             else
                 Destination.Event();
