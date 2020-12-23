@@ -1,4 +1,5 @@
-﻿using MerchantRPG.Models.Engine.Events;
+﻿using GameplayLoopCombat1.classes;
+using MerchantRPG.Models.Engine.Events;
 using MerchantRPG.Models.Engine.GameObjects;
 using System;
 using System.Collections.Generic;
@@ -17,11 +18,17 @@ namespace MerchantRPG.Models.Configuration
             priceMods.Add(ItemType.Armor, (double)rand.Next(20, 200) / 100);
             priceMods.Add(ItemType.Weapons, (double)rand.Next(20, 200) / 100);
             priceMods.Add(ItemType.Goods, (double)rand.Next(20, 200) / 100);
+            int numMercs = rand.Next(1, 4);
+            for (int i = 0; i < numMercs; i++)
+            {
+                Mercs.Add(new Character(Party.Lead.AbilityLevel * rand.Next(20, 200) / 100, true, false));
+            }
         }
 
         public int X { get; set; }
         public int Y { get; set; }
         public string InnName { get; set; }
+        public List<Character> Mercs { get; set; } = new List<Character>();
         public Dictionary<ItemType, double> priceMods { get; set; } = new Dictionary<ItemType, double>() {
         };
 

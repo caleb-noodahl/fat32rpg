@@ -120,10 +120,20 @@ namespace GameplayLoopCombat1.classes
                         KeyValuePair<string, Ability>[] castableArr = castable.ToArray();
                         List<Character> playerTargets = Participants.Where(chars => chars.Player == true).ToList();
                         List<Character> friendlyTargets = Participants.Where(chars => chars.Player == false).ToList();
-                        if (castableArr[npcChoice].Key.Contains("Heal"))
+
+                        if (castableArr[npcChoice].Key.Contains("Wait") && castableArr.Length > 1)
+                        {
+                            Dictionary<string, Ability> castableDic = castable.ToDictionary(v => v.Key, v => v.Value);
+                            castableDic.Remove("Wait");
+                            castableArr = castableDic.ToArray();
+                            npcChoice = rand.Next(0, castable.Count());
+                        }
+
+                        if (castableArr[npcChoice].Key.Contains("Heal") || castableArr[npcChoice].Key.Contains("Evasion") || castableArr[npcChoice].Key.Contains("Stimulant"))
                         {
                             playerTargets = friendlyTargets;
                         }
+                        
 
                         AbilityResponse actionResult = castableArr[npcChoice].Value.Action(Participants[subturn], playerTargets.ToArray(), Turn, castableArr[npcChoice].Key);
                         Console.WriteLine(Participants[subturn].Name + " uses " + castableArr[npcChoice].Key);

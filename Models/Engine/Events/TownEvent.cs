@@ -34,7 +34,7 @@ namespace MerchantRPG.Models.Engine.Events
             while(!IsComplete)
             {
                 Console.WriteLine("What is it you'd like to do?");
-                Console.WriteLine($"buy or sell or travel or rest or fight{Environment.NewLine}"); 
+                Console.WriteLine($"buy or sell or travel or rest or fight or recruit{Environment.NewLine}"); 
                 switch(Console.ReadLine().ToLower())
                 {
                     case "buy":  DisplayBuyMenu();  break;
@@ -42,6 +42,7 @@ namespace MerchantRPG.Models.Engine.Events
                     case "travel": SetTravelContextAndExit(); IsComplete = true; break;
                     case "rest": Rest(); break;
                     case "fight": new GameplayLoopCombat1.classes.Combat(Party.Members); break;
+                    case "recruit": Recruit();  break;
                     default: Console.WriteLine($"I'm afraid that isn't an option...{Environment.NewLine}"); break;
                 }
             }
@@ -61,7 +62,7 @@ namespace MerchantRPG.Models.Engine.Events
                         {
                             member.DoDamage(-10);
                         });
-                        Console.WriteLine("Party healed for 10 at the local inn");
+                        Console.WriteLine("Party healed for 10 at the " + Name + " inn");
                     }
                     else
                         Console.WriteLine("You can't afford " + price + "? Get a job you bumb!");
@@ -70,6 +71,49 @@ namespace MerchantRPG.Models.Engine.Events
                     break;
             }
             return Party.State;
+
+        }
+
+        private void Recruit()
+        {
+            Console.WriteLine("You enter the " + Name +  " Barracks. Standing at a makeshift bar in the lobby are " + _towns.Mercs.Count() + " people, with another at the counter.");
+            Console.WriteLine("The person at the counter speaks. 'Hello there. Are you looking to hire? We've got some mighty tough locals looking for some work if you care to take a look.'");
+            int mercCount = 1;
+            Console.WriteLine("0. Leave");
+
+            _towns.Mercs.ForEach(m => 
+            {
+                Console.WriteLine(mercCount + ". " + m.Name + " Lvl:" + m.AbilityLevel + " Dex:" + m.Dexterity + " Str:" + m.Strength + " Int:" + m.Intelligence + " Cost:$" + m.AbilityLevel * 50);
+                mercCount++;
+            });
+
+            int choice = -1;
+            while (choice > _towns.Mercs.Count() || choice < 0)
+            {
+                Int32.TryParse(Console.ReadLine(), out choice);
+            }
+
+            switch(choice)
+            {
+                case 0:
+                    return;
+                    break;
+                default:
+                    choice -= 1;
+                    Character merc = _towns.Mercs.ElementAt(choice);
+                    Console.WriteLine("'Nice to meet you " + Party.State.Name + ", I'm " + merc.Name + ". If you'd like to hire me to enter your service it will cost you $" + merc.AbilityLevel * 50 + ". Would you like me to join you?' (y/n)");
+                    if(Console.ReadLine().ToLower() == "y")
+                    {
+                        if (Party.State.Spend(merc.AbilityLevel * 50))
+                        {
+                            Party.Members.Add(merc);
+                            Console.WriteLine(merc.Name + " has joined the party!");
+                        }
+                        else
+                            Console.WriteLine("'Doesn't look like you can afford me. Sorry.' " + merc.Name + " returns to their drink.");
+                    }
+                    break;
+            }
 
         }
 

@@ -61,7 +61,7 @@ namespace GameplayLoopCombat1.classes
             }
 
             Player = player;
-            
+            Health = HealthMax;
         }
 
         public Character(string _name, int _dex, int _str, int _int)

@@ -57,6 +57,7 @@ namespace GameplayLoopCombat1.classes
             }
             Party.Difficulty = diff;
             Party.State = new PlayerState();
+            Party.State.Name = name;
 
             result = new Character(name, dex, str, intel);
             result.Player = true;

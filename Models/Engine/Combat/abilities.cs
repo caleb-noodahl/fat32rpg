@@ -18,24 +18,37 @@ namespace GameplayLoopCombat1.classes
     {
         public static Dictionary<string, Ability> AbilityList = new Dictionary<string, Ability>()
         {
+            {"Wait", new Ability(new Requirement(0,0,0,0), (a, b, c, d) => { return new AbilityResponse(); }, 0, 0, 0, "do nothing for your turn" )},
+
             //DEX
-            {"Quick Attack", new Ability(new Requirement(2,1,1,0), QuickAttack, 1, 0, 1, "does dex * 1 dmg to up to 1 target" )},
-            {"MultiShot", new Ability(new Requirement(5,1,1,0), MultiShot, 5, 3, 0.5, "does dex * 0.5 dmg to up to 5 targets" )},
-            {"Evasion", new Ability(new Requirement(7,1,1,0), Evasion, 1, 2, 2, "evade dex * 2% of attacks until the end of combabt" )},
-            {"Evasive Action", new Ability(new Requirement(10,1,1,0), Evasion, 3, 3, 2, "3 targets evade dex * 2% of attacks until the end of combabt" )},            
+            {"Quick Attack", new Ability(new Requirement(2,0,0,0), QuickAttack, 1, 0, 1, "does dex * 1 dmg to up to 1 target" )},
+            {"MultiShot", new Ability(new Requirement(5,0,0,0), MultiShot, 5, 3, 0.5, "does dex * 0.5 dmg to up to 5 targets" )},
+            {"Throw Sand", new Ability(new Requirement(15,5,0,0), ThrowSand, 1, 3, 3, "increase the damage taken by 1 target by dex * 5% for 2 turns" )},
+            {"Evasion", new Ability(new Requirement(7,0,0,0), Evasion, 1, 2, 2, "evade dex * 2% of attacks until the end of combabt" )},
+            {"Evasive Action", new Ability(new Requirement(10,0,0,0), Evasion, 3, 3, 2, "3 targets evade dex * 2% of attacks until the end of combat" )},
+            {"Achille's Heel", new Ability(new Requirement(12,0,0,0), DexterityAttack, 1, 5, 3, "does dex * 3 dmg to 1 target" )},
+            {"Assassinate", new Ability(new Requirement(15,5,0,0), Assassinate, 1, 7, 1, "instantly kill any target with lower health and level than you" )},
+            
 
             //STR
-            {"Strong Attack", new Ability(new Requirement(1,2,1,0), StrongAttack, 1, 0, 1, "does str * 1 dmg to up to 1 target" )},
-            {"Cleave", new Ability(new Requirement(1,5,1,0), Cleave, 3, 4, 0.7, "does str * 0.7 dmg to up to 3 targets" )},
-            {"Bleed", new Ability(new Requirement(1,7,1,0), Bleed, 1, 2, 0.3, "does str * 0.3 dmg to 1 target for 6 turns" )},
-            {"Cleave Bleed", new Ability(new Requirement(1,10,1,0), Bleed, 3, 4, 0.3, "does str * 0.3 dmg to 3 target for 6 turns" )},
+            {"Strong Attack", new Ability(new Requirement(0,2,0,0), StrongAttack, 1, 0, 1, "does str * 1 dmg to 1 target" )},
+            {"Cleave", new Ability(new Requirement(0,5,0,0), Cleave, 3, 4, 0.7, "does str * 0.7 dmg to 3 targets" )},
+            {"Bleed", new Ability(new Requirement(0,7,0,0), Bleed, 1, 2, 0.3, "does str * 0.3 dmg to 1 target for 6 turns" )},
+            {"Block", new Ability(new Requirement(0,7,0,0), Block, 1, 0, 0.05, "use your body to block str * 5% of incoming damage to a target for 1 turn" )},
+            {"Cleave Bleed", new Ability(new Requirement(0,10,0,0), Bleed, 3, 4, 0.3, "does str * 0.3 dmg to 3 target for 6 turns" )},
+            {"Throw Enemy", new Ability(new Requirement(5,10,0,0), ThrowEnemy, 2, 4, 2, "throw one enemy at another, damaging both for str * 2 + dex" )},
+            {"Overpower", new Ability(new Requirement(15,0,0,0), StrengthAttack, 1, 6, 3, "does str * 3 dmg to 1 targets" )},
 
             //INT
-            {"Calculated Attack", new Ability(new Requirement(1,1,2,0), CalculatedAttack, 1, 0, 1, "does int * 1 dmg to up to 1 target" )},
-            {"Fireball", new Ability(new Requirement(1,1,5,0), Fireball, 3, 4, 0.7, "does int * 0.7 dmg to up tp 3 targets")},
-            {"Heal", new Ability(new Requirement(1,1,3,0), Heal, 1, 2, 1, "heals for int * 1 to 1 target")},
-            {"Group Heal", new Ability(new Requirement(1,1,8,0), Heal, 3, 4, 1, "heals for int * 1 to 3 targets")},
-            {"Greater Fireball", new Ability(new Requirement(1,1,10,0), Fireball, 5, 4, 1, "does int * 1 dmg to up tp 5 targets")},
+            {"Calculated Attack", new Ability(new Requirement(0,0,2,0), CalculatedAttack, 1, 0, 1, "does int * 1 dmg to 1 target" )},
+            {"Fireball", new Ability(new Requirement(0,0,5,0), Fireball, 3, 4, 0.7, "does int * 0.7 dmg to 3 targets")},
+            {"Heal", new Ability(new Requirement(0,0,3,0), Heal, 1, 2, 1, "heals for int * 1 to 1 target")},
+            {"Group Heal", new Ability(new Requirement(0,0,8,0), Heal, 3, 4, 1, "heals for int * 1 to 3 targets")},
+            {"Greater Fireball", new Ability(new Requirement(0,0,10,0), Fireball, 5, 4, 1, "does int * 1 dmg to 5 targets")},
+            {"Greater Heal", new Ability(new Requirement(0,0,12,0), Heal, 1, 2, 2, "heals for int * 2 to 1 target")},
+            {"Group Minor Stimulant", new Ability(new Requirement(3,3,10,0), Stimulant, 3, 2, 1, "buff 3 targets for +2 to all stats for 3 turns")},
+            {"Stimulant", new Ability(new Requirement(3,3,10,0), Stimulant, 1, 2, 5, "buff 1 targets for +5 to all stats for 3 turns")},
+            {"Lightning Strike", new Ability(new Requirement(0,0,11,0), IntelligenceAttack, 1, 4, 1, "does int * 2 dmg to 1 targets")},
         };
 
         #region Ability Actions
@@ -124,6 +137,90 @@ namespace GameplayLoopCombat1.classes
             return resp;
         }
 
+        public static AbilityResponse ThrowSand(Character caster, Character[] targets, int turn, string abilityName)
+        {
+            AbilityResponse resp = new AbilityResponse();
+
+            //Requirements
+            resp.Usable = AbilityList[abilityName].MeetsRequirements(caster, turn);
+            if (!resp.Usable)
+            {
+                resp.Message = "The requirements for " + abilityName + "  are" + AbilityList[abilityName].PrintReqs();
+                return resp;
+            }
+
+            //Ability Actions
+            int targetCount = targets.Length;
+            if (targetCount > AbilityList[abilityName].MaxTargets)
+                targetCount = AbilityList[abilityName].MaxTargets;
+            for (int tCount = 0; tCount < targetCount; tCount++)
+            {
+                double dmgMod = caster.Dexterity * AbilityList[abilityName].DmgMod;
+                StatusEffect status = new StatusEffect(abilityName, "Increases damage taken by " + dmgMod + "%")
+                {
+                     DamageModifier = dmgMod
+                };
+
+                targets[tCount].Effects.Add(status);
+                resp.Message += " " + targets[tCount].Name + " is taking " + dmgMod + "% extra damage";
+            }
+
+            return resp;
+        }
+
+        public static AbilityResponse DexterityAttack(Character caster, Character[] targets, int turn, string abilityName)
+        {
+            AbilityResponse resp = new AbilityResponse();
+
+            //Requirements
+            resp.Usable = AbilityList[abilityName].MeetsRequirements(caster, turn);
+            if (!resp.Usable)
+            {
+                resp.Message = "The requirements for " + abilityName + " are " + AbilityList[abilityName].PrintReqs();
+                return resp;
+            }
+
+            //Ability Actions
+            int targetCount = targets.Length;
+            if (targetCount > AbilityList[abilityName].MaxTargets)
+                targetCount = AbilityList[abilityName].MaxTargets;
+            for (int tCount = 0; tCount < targetCount; tCount++)
+            {
+                double dmg = caster.Dexterity * AbilityList[abilityName].DmgMod;
+                dmg = targets[tCount].DoDamage(dmg);
+                resp.Message += " " + targets[tCount].Name + " hit for " + dmg;
+            }
+
+            return resp;
+        }
+
+        public static AbilityResponse Assassinate(Character caster, Character[] targets, int turn, string abilityName)
+        {
+            AbilityResponse resp = new AbilityResponse();
+
+            //Requirements
+            resp.Usable = AbilityList["Assassinate"].MeetsRequirements(caster, turn);
+            if (!resp.Usable)
+            {
+                resp.Message = "The requirements for Assassinate are" + AbilityList["Assassinate"].PrintReqs();
+                return resp;
+            }
+
+            //Ability Actions
+            if(targets[0].Health > caster.Health || targets[0].AbilityLevel > caster.AbilityLevel)
+            {
+                resp.Message = targets[0].Name + " is more powerful and vital than you, your assassination attempt fails."; 
+                return resp;
+            }
+            else
+            {
+                resp.Message = targets[0].Name + " falls to the ground, dead before " + caster.Name + "'s feet";
+                targets[0].Health = 0;
+                return resp;
+            }
+
+        }
+
         //STR
         public static AbilityResponse StrongAttack(Character caster, Character[] targets, int turn, string abilityName)
         {
@@ -138,6 +235,32 @@ namespace GameplayLoopCombat1.classes
             }
 
             //Ability Actions 
+            int targetCount = targets.Length;
+            if (targetCount > AbilityList[abilityName].MaxTargets)
+                targetCount = AbilityList[abilityName].MaxTargets;
+            for (int tCount = 0; tCount < targetCount; tCount++)
+            {
+                double dmg = caster.Strength * AbilityList[abilityName].DmgMod;
+                dmg = targets[tCount].DoDamage(dmg);
+                resp.Message += " " + targets[tCount].Name + " hit for " + dmg;
+            }
+
+            return resp;
+        }
+
+        public static AbilityResponse StrengthAttack(Character caster, Character[] targets, int turn, string abilityName)
+        {
+            AbilityResponse resp = new AbilityResponse();
+
+            //Requirements
+            resp.Usable = AbilityList[abilityName].MeetsRequirements(caster, turn);
+            if (!resp.Usable)
+            {
+                resp.Message = "The requirements for " + abilityName + " are " + AbilityList[abilityName].PrintReqs();
+                return resp;
+            }
+
+            //Ability Actions
             int targetCount = targets.Length;
             if (targetCount > AbilityList[abilityName].MaxTargets)
                 targetCount = AbilityList[abilityName].MaxTargets;
@@ -212,6 +335,67 @@ namespace GameplayLoopCombat1.classes
             return resp;
         }
 
+        public static AbilityResponse Block(Character caster, Character[] targets, int turn, string abilityName)
+        {
+            AbilityResponse resp = new AbilityResponse();
+
+            //Requirements
+            resp.Usable = AbilityList[abilityName].MeetsRequirements(caster, turn);
+            if (!resp.Usable)
+            {
+                resp.Message = "The requirements for " + abilityName + " are" + AbilityList[abilityName].PrintReqs();
+                return resp;
+            }
+
+            //Ability Actions
+            int targetCount = targets.Length;
+            if (targetCount > AbilityList[abilityName].MaxTargets)
+                targetCount = AbilityList[abilityName].MaxTargets;
+            for (int tCount = 0; tCount < targetCount; tCount++)
+            {
+                double block = caster.Strength * AbilityList[abilityName].DmgMod;
+                if(block > 75)
+                {
+                    block = 75;
+                }
+                StatusEffect status = new StatusEffect(abilityName, "Blocking " + block + "% of incoming damage")
+                {
+                    DamageModifier = 1 - block
+                };
+
+                targets[tCount].Effects.Add(status);
+                resp.Message += " " + targets[tCount].Name + " is blocking " + block + "% of incoming damage";
+            }
+
+            return resp;
+        }
+
+        public static AbilityResponse ThrowEnemy(Character caster, Character[] targets, int turn, string abilityName)
+        {
+            AbilityResponse resp = new AbilityResponse();
+
+            //Requirements
+            resp.Usable = AbilityList[abilityName].MeetsRequirements(caster, turn);
+            if (!resp.Usable)
+            {
+                resp.Message = "The requirements for " + abilityName + " are" + AbilityList[abilityName].PrintReqs();
+                return resp;
+            }
+
+            //Ability Actions
+            int targetCount = targets.Length;
+            if (targetCount > AbilityList[abilityName].MaxTargets)
+                targetCount = AbilityList[abilityName].MaxTargets;
+            for (int tCount = 0; tCount < targetCount; tCount++)
+            {
+                double dmg = caster.Strength * AbilityList[abilityName].DmgMod + caster.Dexterity;
+                dmg = targets[tCount].DoDamage(dmg);
+                resp.Message += " " + targets[tCount].Name + " hit for " + dmg;
+            }
+
+            return resp;
+        }
+
         //INT
         public static AbilityResponse CalculatedAttack(Character caster, Character[] targets, int turn, string abilityName)
         {
@@ -226,6 +410,32 @@ namespace GameplayLoopCombat1.classes
             }
 
             //Ability Actions 
+            int targetCount = targets.Length;
+            if (targetCount > AbilityList[abilityName].MaxTargets)
+                targetCount = AbilityList[abilityName].MaxTargets;
+            for (int tCount = 0; tCount < targetCount; tCount++)
+            {
+                double dmg = caster.Intelligence * AbilityList[abilityName].DmgMod;
+                dmg = targets[tCount].DoDamage(dmg);
+                resp.Message += " " + targets[tCount].Name + " hit for " + dmg;
+            }
+
+            return resp;
+        }
+
+        public static AbilityResponse IntelligenceAttack(Character caster, Character[] targets, int turn, string abilityName)
+        {
+            AbilityResponse resp = new AbilityResponse();
+
+            //Requirements
+            resp.Usable = AbilityList[abilityName].MeetsRequirements(caster, turn);
+            if (!resp.Usable)
+            {
+                resp.Message = "The requirements for " + abilityName + " are " + AbilityList[abilityName].PrintReqs();
+                return resp;
+            }
+
+            //Ability Actions
             int targetCount = targets.Length;
             if (targetCount > AbilityList[abilityName].MaxTargets)
                 targetCount = AbilityList[abilityName].MaxTargets;
@@ -273,7 +483,7 @@ namespace GameplayLoopCombat1.classes
             resp.Usable = AbilityList[abilityName].MeetsRequirements(caster, turn);
             if (!resp.Usable)
             {
-                resp.Message = "The requirements for Heal are" + AbilityList[abilityName].PrintReqs();
+                resp.Message = "The requirements for Heal are " + AbilityList[abilityName].PrintReqs();
                 return resp;
             }
 
@@ -288,6 +498,39 @@ namespace GameplayLoopCombat1.classes
                 if (targets[tCount].Health > targets[tCount].HealthMax)
                     targets[tCount].Health = targets[tCount].HealthMax;
                 resp.Message += " " + targets[tCount].Name + " healed for " + heal;
+            }
+
+            return resp;
+        }
+
+        public static AbilityResponse Stimulant(Character caster, Character[] targets, int turn, string abilityName)
+        {
+            AbilityResponse resp = new AbilityResponse();
+
+            //Requirements
+            resp.Usable = AbilityList[abilityName].MeetsRequirements(caster, turn);
+            if (!resp.Usable)
+            {
+                resp.Message = "The requirements for " + abilityName + " are " + AbilityList[abilityName].PrintReqs();
+                return resp;
+            }
+
+            //Ability Actions
+            int targetCount = targets.Length;
+            if (targetCount > AbilityList[abilityName].MaxTargets)
+                targetCount = AbilityList[abilityName].MaxTargets;
+            for (int tCount = 0; tCount < targetCount; tCount++)
+            {
+                StatusEffect status = new StatusEffect(abilityName, "Buffed for +" + (int)AbilityList[abilityName].DmgMod + " to all stats")
+                {
+                    Dexterity = (int)AbilityList[abilityName].DmgMod,
+                    Strength = (int)AbilityList[abilityName].DmgMod,
+                    Intelligence = (int)AbilityList[abilityName].DmgMod,
+                    Turns = 3
+                };
+
+                targets[tCount].Effects.Add(status);
+                resp.Message += " " + targets[tCount].Name + " is buffed for +" + (int)AbilityList[abilityName].DmgMod + " to all stats";
             }
 
             return resp;
