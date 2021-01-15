@@ -10,6 +10,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
+using MerchantRPG.Models.Engine.Multiplayer;
 
 namespace MerchantRPG
 {
@@ -21,13 +22,15 @@ namespace MerchantRPG
             CharacterCreator cc = new CharacterCreator();
             Party.Lead = cc.result;
             Party.Members.Add(cc.result);
-            Map.GenerateTowns();
+            await MultiPlayer.Start();
+            Console.WriteLine("---continue---");
+            Console.ReadLine();
+            if (!Party.Multiplayer || Party.Host)
+                Map.GenerateTowns();
             var result = await Map.towns[0].Event();
             Console.ReadLine();
 
         }
-
-
         
         
     }   

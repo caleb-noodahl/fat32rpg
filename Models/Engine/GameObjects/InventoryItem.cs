@@ -1,4 +1,5 @@
 ﻿using MerchantRPG.Models.Engine.Combat;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -19,6 +20,19 @@ namespace MerchantRPG.Models.Engine.GameObjects
         public double ValueWithMercantileModifier(int modifier)
         {
             return Value;
+        }
+
+        [JsonConstructor]
+        public InventoryItem(int statModifier, Stats stat, string name, int weight, long value, int rating, ItemType type, Equipment equip)
+        {
+            StatModifier = StatModifier;
+            Stat = stat;
+            Name = name;
+            Weight = weight;
+            Value = value;
+            Rating = rating;
+            Type = type;
+            Equip = equip;
         }
 
         public InventoryItem()

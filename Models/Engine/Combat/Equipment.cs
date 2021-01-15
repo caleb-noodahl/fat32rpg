@@ -1,4 +1,5 @@
 ﻿using MerchantRPG.Models.Engine.GameObjects;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,6 +18,15 @@ namespace MerchantRPG.Models.Engine.Combat
             Strength = str;
             Intelligence = intel;
             Description = description;
+        }
+        [JsonConstructor]
+        public Equipment(int dexterity, int strength, int intelligence, string description, Guid id)
+        {
+            Dexterity = dexterity;
+            Strength = strength;
+            Intelligence = intelligence;
+            Description = description;
+            ID = id;
         }
 
         public Equipment(ItemType item)

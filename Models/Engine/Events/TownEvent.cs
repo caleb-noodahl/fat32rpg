@@ -7,13 +7,27 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
+using MerchantRPG.Models.Engine.Multiplayer;
 
 namespace MerchantRPG.Models.Engine.Events
 {
     public class TownEvent : GameEvent
     {
-        public  List<InventoryItem> _i { get; set; } = new List<InventoryItem>();
-        public TownSettings _towns; 
+        public  List<InventoryItem> _I { get; set; } = new List<InventoryItem>();
+        public TownSettings _Towns { get; set; } 
+
+        [JsonConstructor]
+        public TownEvent(TownSettings _towns, List<InventoryItem> _i, Context context, bool isComplete, string name, string message, EventAction eventAction)
+        {
+            _I = _i;
+            _Towns = _towns;
+            Context = context;
+            IsComplete = isComplete;
+            Name = name;
+            Message = message;
+            EventAction = eventAction;
+        }
 
         public TownEvent(string name, TownSettings towns, InventorySettings invSettings)
         {
@@ -21,9 +35,9 @@ namespace MerchantRPG.Models.Engine.Events
             this.Context = Context.Town;
             this.Name = name == string.Empty ? "Rome" : name;
             this.EventAction = Event;
-            _i = invSettings.Default;
-            _towns = towns;
-            _towns.InnName = "The " + Names.Adjective(rand.Next(0, Enum.GetValues(typeof(Names.Adjectives)).Length)) + " " + Names.Things[rand.Next(0, Names.Things.Length)];
+            _I = invSettings.Default;
+            _Towns = towns;
+            _Towns.InnName = "The " + Names.Adjective(rand.Next(0, Enum.GetValues(typeof(Names.Adjectives)).Length)) + " " + Names.Things[rand.Next(0, Names.Things.Length)];
         }
 
         public async Task<PlayerState> Event()
@@ -53,7 +67,7 @@ namespace MerchantRPG.Models.Engine.Events
         private PlayerState Rest()
         {
             int price = new Random().Next(1, 5) * 10;
-            Console.WriteLine("This is " + _towns.InnName + ", a night here costs " + price + " gold. You staying? (y/n)");
+            Console.WriteLine("This is " + _Towns.InnName + ", a night here costs " + price + " gold. You staying? (y/n)");
             switch(Console.ReadLine())
             {
                 case "y":
@@ -64,6 +78,7 @@ namespace MerchantRPG.Models.Engine.Events
                             member.DoDamage(-10);
                         });
                         Console.WriteLine("Party healed for 10 at the " + Name + " inn");
+                        Client.SendState(Party.Lead.Name + "'s party healed for 10 at the " + Name + " inn");
                     }
                     else
                         Console.WriteLine("You can't afford " + price + "? Get a job you bumb!");
@@ -77,19 +92,19 @@ namespace MerchantRPG.Models.Engine.Events
 
         private void Recruit()
         {
-            Console.WriteLine("You enter the " + Name +  " Barracks. Standing at a makeshift bar in the lobby are " + _towns.Mercs.Count() + " people, with another at the counter.");
+            Console.WriteLine("You enter the " + Name +  " Barracks. Standing at a makeshift bar in the lobby are " + _Towns.Mercs.Count() + " people, with another at the counter.");
             Console.WriteLine("The person at the counter speaks. 'Hello there. Are you looking to hire? We've got some mighty tough locals looking for some work if you care to take a look.'");
             int mercCount = 1;
             Console.WriteLine("0. Leave");
 
-            _towns.Mercs.ForEach(m => 
+            _Towns.Mercs.ForEach(m => 
             {
                 Console.WriteLine(mercCount + ". " + m.Name + " Lvl:" + m.AbilityLevel + " Dex:" + m.Dexterity + " Str:" + m.Strength + " Int:" + m.Intelligence + " Cost:$" + m.AbilityLevel * 50);
                 mercCount++;
             });
 
             int choice = -1;
-            while (choice > _towns.Mercs.Count() || choice < 0)
+            while (choice > _Towns.Mercs.Count() || choice < 0)
             {
                 Int32.TryParse(Console.ReadLine(), out choice);
             }
@@ -101,14 +116,16 @@ namespace MerchantRPG.Models.Engine.Events
                     break;
                 default:
                     choice -= 1;
-                    Character merc = _towns.Mercs.ElementAt(choice);
+                    Character merc = _Towns.Mercs.ElementAt(choice);
                     Console.WriteLine("'Nice to meet you " + Party.State.Name + ", I'm " + merc.Name + ". If you'd like to hire me to enter your service it will cost you $" + merc.AbilityLevel * 50 + ". Would you like me to join you?' (y/n)");
                     if(Console.ReadLine().ToLower() == "y")
                     {
                         if (Party.State.Spend(merc.AbilityLevel * 50))
                         {
                             Party.Members.Add(merc);
-                            _towns.Mercs.Remove(merc);
+                            _Towns.Mercs.Remove(merc);
+                            Client.SendState(Party.State.Name + " has hired " + merc.Name + " to join their party.");
+                            Client.SendMap(merc.Name + " is no longer at the " + Name + " barracks");
                             Console.WriteLine(merc.Name + " has joined the party!");
                         }
                         else
@@ -122,16 +139,16 @@ namespace MerchantRPG.Models.Engine.Events
         private PlayerState SetTravelContextAndExit()
         {
             Console.WriteLine($"{Environment.NewLine}Which city would you like to embark for?");
-            _towns.TownDefintions.ForEach(x => 
+            _Towns.TownDefintions.ForEach(x => 
             {
                 if(x.Name != this.Name)
                 {
-                    Console.WriteLine($"{x.Name} is {_towns.GetDistance(x)} away.");
+                    Console.WriteLine($"{x.Name} is {_Towns.GetDistance(x)} away.");
                     Console.WriteLine($"Town rating : {x.Rating}{Environment.NewLine}");
                 }
             });
             var selection = Console.ReadLine().ToLower();
-            var objective = _towns.TownDefintions.FirstOrDefault(x => x.Name.ToLower() == selection);
+            var objective = _Towns.TownDefintions.FirstOrDefault(x => x.Name.ToLower() == selection);
             if(objective == null)
             {
                 Console.WriteLine($"That selection isn't available..");
@@ -150,7 +167,7 @@ namespace MerchantRPG.Models.Engine.Events
             Console.WriteLine($"//To purchase items - ex : buy apples 3{Environment.NewLine}");
             Console.WriteLine($"The current items avaialble on the market are :");
             HashSet<ItemType> typeCollection = new HashSet<ItemType>();
-            _i.ForEach(x => { typeCollection.Add(x.Type); });
+            _I.ForEach(x => { typeCollection.Add(x.Type); });
             foreach(var t in typeCollection)
             {
                 Console.WriteLine(t);
@@ -159,11 +176,11 @@ namespace MerchantRPG.Models.Engine.Events
             var itemType = Console.ReadLine().ToLower();
             Console.WriteLine($"Your currency : {Party.State.Currency}. Free capacity : {Party.State.Capacity}{Environment.NewLine}");
             
-            var filteredItems = _i.Where(i => i.Rating <= Party.State.Rating && i.Type == Party.State.ParseTypeSelection(itemType)).ToList();
+            var filteredItems = _I.Where(i => i.Rating <= Party.State.Rating && i.Type == Party.State.ParseTypeSelection(itemType)).ToList();
             filteredItems.ForEach(it =>
             {
                 Console.WriteLine($"Name : {it.Name}");
-                Console.WriteLine($" Price { it.Value * _towns.priceMods[it.Type] } Weight { it.Weight}");
+                Console.WriteLine($" Price { it.Value * _Towns.PriceMods[it.Type] } Weight { it.Weight}");
                 Console.WriteLine($" Stat Modifier : {it.Stat}, {it.StatModifier}");
                 Console.WriteLine($"{Environment.NewLine}");
             });
@@ -185,6 +202,8 @@ namespace MerchantRPG.Models.Engine.Events
                         
                     Console.WriteLine($"You now have {totalItemType} {item.Name}(s) in your inventory{Environment.NewLine}");
                     Console.WriteLine($"Your currency : {Party.State.Currency}. Free capacity : {Party.State.Capacity} ");
+                    Client.SendMap();
+                    Client.SendState(Party.Lead.Name + " has bought " + item.Name + " from " + Name + " General Store");
                 }
 
                 
@@ -202,7 +221,7 @@ namespace MerchantRPG.Models.Engine.Events
             Console.WriteLine("0. Exit");
             Party.State.Inventory.OrderBy(item => item.Value).ToList().ForEach(item => 
             {
-                Console.WriteLine(option + ". " + item.Name + " - $" + item.Value * _towns.priceMods[item.Type] + " Weight:" + item.Weight);
+                Console.WriteLine(option + ". " + item.Name + " - $" + item.Value * _Towns.PriceMods[item.Type] + " Weight:" + item.Weight);
                 option++;
             });
 
@@ -219,10 +238,12 @@ namespace MerchantRPG.Models.Engine.Events
                     break;
                 default:
                     InventoryItem selling = Party.State.Inventory.OrderBy(item => item.Value).ElementAt(sell);
-                    Console.WriteLine("Confirm sell (y/n) " + selling.Name + " for $" + selling.Value * _towns.priceMods[selling.Type]);
+                    Console.WriteLine("Confirm sell (y/n) " + selling.Name + " for $" + selling.Value * _Towns.PriceMods[selling.Type]);
                     if(Console.ReadLine().ToLower() == "y")
                     {
                         Party.State.Sell(selling, this);
+                        Client.SendMap();
+                        Client.SendState(Party.Lead.Name + " has sold " + selling.Name + " to " + Name + " General Store");
                     }
                     break;
             }

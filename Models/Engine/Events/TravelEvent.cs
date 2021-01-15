@@ -15,7 +15,7 @@ namespace MerchantRPG.Models.Engine.Events
         { 
             get
             {
-                return Origin._towns.GetDistance(Destination);
+                return Origin._Towns.GetDistance(Destination);
             }
         }
 

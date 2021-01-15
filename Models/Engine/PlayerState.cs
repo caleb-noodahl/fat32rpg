@@ -5,6 +5,7 @@ using System.Linq;
 using MerchantRPG.Models.Engine.Combat;
 using MerchantRPG.Models.Engine.Events;
 using MerchantRPG.Models.Engine.GameObjects;
+using Newtonsoft.Json;
 
 namespace MerchantRPG.Models.Engine
 {
@@ -48,14 +49,18 @@ namespace MerchantRPG.Models.Engine
                 MaxCapacity = 25;
         }
 
-        public PlayerState(string name, int _dex, int _str, int _int)
+        [JsonConstructor]
+        public PlayerState(string name, Context currentContext, Context nextContext, double rating, long currency, List<InventoryItem> inventory, string objective, double objectiveDistance, int maxCapacity)
         {
             this.Name = name;
-            CurrentContext = Context.Unknown;
-            NextContext = Context.Unknown;
-            Rating = 0;
-            Objective = string.Empty;
-            ObjectiveDistance = 0;
+            CurrentContext = currentContext;
+            NextContext = nextContext;
+            Rating = rating;
+            Currency = currency;
+            Inventory = inventory;
+            Objective = objective;
+            ObjectiveDistance = objectiveDistance;
+            MaxCapacity = maxCapacity;
         }
 
         internal ItemType ParseTypeSelection(string ts)
@@ -89,17 +94,17 @@ namespace MerchantRPG.Models.Engine
 
             if (buying.Type == ItemType.Goods)
             {
-                valueForGoods = (long)(buying.Value / (double)buying.Weight * (double)amount * buyingFrom._towns.priceMods[buying.Type]);
+                valueForGoods = (long)(buying.Value / (double)buying.Weight * (double)amount * buyingFrom._Towns.PriceMods[buying.Type]);
                 weightForGoods = amount;
                 cost = valueForGoods;
                 
-                InventoryItem storeItem = buyingFrom._i.First(i => i.Name == buying.Name);
+                InventoryItem storeItem = buyingFrom._I.First(i => i.Name == buying.Name);
                 if (amount > storeItem.Weight)
                     return false;
 
             }
             else
-                cost = (long)(buying.Value * buyingFrom._towns.priceMods[buying.Type]);
+                cost = (long)(buying.Value * buyingFrom._Towns.PriceMods[buying.Type]);
 
             if (Spend(cost))
             {
@@ -108,11 +113,11 @@ namespace MerchantRPG.Models.Engine
                     InventoryItem item = Inventory.First(i => i.Name == buying.Name);
                     item.Weight += weightForGoods;
                     item.Value += valueForGoods;
-                    InventoryItem storeItem = buyingFrom._i.First(i => i.Name == buying.Name);
+                    InventoryItem storeItem = buyingFrom._I.First(i => i.Name == buying.Name);
                     storeItem.Value -= valueForGoods;
                     storeItem.Weight -= weightForGoods;
                     if(storeItem.Weight <= 0)
-                        buyingFrom._i.Remove(buying);
+                        buyingFrom._I.Remove(buying);
                 }
                 else if(buying.Type == ItemType.Goods)
                 {
@@ -126,17 +131,17 @@ namespace MerchantRPG.Models.Engine
                         StatModifier = buying.StatModifier,
                         Rating = buying.Rating
                     });
-                    InventoryItem storeItem = buyingFrom._i.First(i => i.Name == buying.Name);
+                    InventoryItem storeItem = buyingFrom._I.First(i => i.Name == buying.Name);
                     storeItem.Value -= valueForGoods;
                     storeItem.Weight -= weightForGoods;
                     if (storeItem.Weight <= 0)
-                        buyingFrom._i.Remove(buying);
+                        buyingFrom._I.Remove(buying);
                 }
                 else if (AddToInventory(buying))
                 {
                     if (buying.Equip != null)
                         buying.Equip.DistributeEquipment(Party.Lead, true);
-                    buyingFrom._i.Remove(buying);
+                    buyingFrom._I.Remove(buying);
                     return true;
                 }
                 else
@@ -169,9 +174,9 @@ namespace MerchantRPG.Models.Engine
                 Party.Members.Find(c => c.Equip.Contains(selling.Equip)).Equip.Remove(selling.Equip);
             }
 
-            sellingTo._i.Add(selling);
+            sellingTo._I.Add(selling);
 
-            double soldVal = selling.Value * sellingTo._towns.priceMods[selling.Type];
+            double soldVal = selling.Value * sellingTo._Towns.PriceMods[selling.Type];
             Currency += (long)soldVal;
 
             Console.WriteLine("Successfully sold " + selling.Name + " to the shop at " + sellingTo.Name + " for " + soldVal);

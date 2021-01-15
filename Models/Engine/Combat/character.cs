@@ -1,6 +1,7 @@
 ﻿using MerchantRPG.Models.Engine;
 using MerchantRPG.Models.Engine.Combat;
 using MerchantRPG.Models.Engine.GameObjects;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -72,7 +73,19 @@ namespace MerchantRPG.Models.Engine.Combat
             Intelligence = _int;
             Health = HealthMax;
         }
-       
+        [JsonConstructor]
+        public Character(string name, int dexterity, int strength, int intelligence, bool player, List<Equipment> equip, List<StatusEffect> effects)
+        {
+            Name = name;
+            Dexterity = dexterity;
+            Strength = strength;
+            Intelligence = intelligence;
+            Health = HealthMax;
+            Player = player;
+            Equip = equip;
+            Effects = effects;
+        }
+
         public void AddEquipment(Equipment equipment)
         {
             Dexterity += equipment.Dexterity;

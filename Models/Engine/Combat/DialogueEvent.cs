@@ -29,7 +29,7 @@ namespace MerchantRPG.Models.Engine.Combat
 
         public enum ResolveTypes
         {
-            CombatOrEquipment, PartyOrNot, ModifyOrNot, CombatOrNot, EquipmentOrNot
+            CombatOrEquipment, PartyOrNot, ModifyOrNot, CombatOrNot, EquipmentOrNot, CharacterExistsOrNot
         }
     }
 }
